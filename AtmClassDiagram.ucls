@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.8" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true">  
+  <class id="1" language="java" name="atm.Balance" project="ATM" file="/ATM/src/atm/ATM.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1039" y="69"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="atm.hundredButton" project="ATM" file="/ATM/src/atm/ATM.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1275" y="492"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="atm.OptionWindow" project="ATM" file="/ATM/src/atm/ATM.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2336" y="329"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="atm.ATM" project="ATM" file="/ATM/src/atm/ATM.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2158" y="142"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="atm.twentyButton" project="ATM" file="/ATM/src/atm/ATM.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1272" y="168"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="atm.exitSystem" project="ATM" file="/ATM/src/atm/ATM.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1044" y="281"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="7" language="java" name="atm.WithdrawalMoney" project="ATM" file="/ATM/src/atm/ATM.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1514" y="456"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" name="atm.exitTheSystem" project="ATM" file="/ATM/src/atm/ATM.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1033" y="389"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="9" language="java" name="atm.fourtyButton" project="ATM" file="/ATM/src/atm/ATM.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1274" y="277"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="10" language="java" name="atm.authenticateUser" project="ATM" file="/ATM/src/atm/ATM.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1272" y="66"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="11" language="java" name="atm.AtmMain" project="ATM" file="/ATM/src/atm/ATM.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2319" y="4"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="12" language="java" name="atm.sixtyButton" project="ATM" file="/ATM/src/atm/ATM.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1270" y="384"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="13" language="java" name="atm.cancelButton" project="ATM" file="/ATM/src/atm/ATM.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1042" y="500"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="14" language="java" name="atm.hundredTwentyButton" project="ATM" file="/ATM/src/atm/ATM.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1279" y="601"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="15" language="java" name="atm.Account" project="ATM" file="/ATM/src/atm/Account.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1948" y="187"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="16" language="java" name="atm.ATMCaseStudy" project="ATM" file="/ATM/src/atm/ATMCaseStudy.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1077" y="174"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="17" language="java" name="atm.BalanceInquiry" project="ATM" file="/ATM/src/atm/BalanceInquiry.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1518" y="265"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="18" language="java" name="atm.BankDatabase" project="ATM" file="/ATM/src/atm/BankDatabase.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1880" y="83"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="19" language="java" name="atm.CashDispenser" project="ATM" file="/ATM/src/atm/CashDispenser.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2226" y="398"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="20" language="java" name="atm.Deposit.depositMoney" project="ATM" file="/ATM/src/atm/Deposit.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2062" y="303"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="21" language="java" name="atm.Deposit" project="ATM" file="/ATM/src/atm/Deposit.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1822" y="243"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="22" language="java" name="atm.DepositSlot" project="ATM" file="/ATM/src/atm/DepositSlot.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2361" y="130"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="23" language="java" name="atm.Transaction" project="ATM" file="/ATM/src/atm/Transaction.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1514" y="90"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="24" language="java" name="atm.Withdrawal" project="ATM" file="/ATM/src/atm/Withdrawal.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1765" y="347"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <interface id="25" language="java" name="java.awt.event.ActionListener" project="ATM" 
+    file="/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/jre/lib/rt.jar" binary="true" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1749" y="556"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <class id="26" language="java" name="java.lang.Object" project="ATM" 
+    file="/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/jre/lib/rt.jar" binary="true" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1944" y="-182"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <generalization id="27">    
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="26"/>  
+  </generalization>  
+  <generalization id="28">    
+    <end type="SOURCE" refId="17"/>    
+    <end type="TARGET" refId="23"/>  
+  </generalization>  
+  <realization id="29">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="25"/>  
+  </realization>  
+  <generalization id="30">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="26"/>  
+  </generalization>  
+  <generalization id="31">    
+    <end type="SOURCE" refId="11"/>    
+    <end type="TARGET" refId="26"/>  
+  </generalization>  
+  <association id="32">    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="33" name="bankDatabase">        
+        <position height="0" width="0" x="33" y="-10"/>      
+      </attribute>      
+      <multiplicity id="34" minimum="0" maximum="1">        
+        <position height="0" width="0" x="33" y="-10"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="18" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="35">    
+    <end type="SOURCE" refId="20"/>    
+    <end type="TARGET" refId="26"/>  
+  </generalization>  
+  <generalization id="36">    
+    <end type="SOURCE" refId="16"/>    
+    <end type="TARGET" refId="26"/>  
+  </generalization>  
+  <generalization id="37">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="26"/>  
+  </generalization>  
+  <generalization id="38">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="26"/>  
+  </generalization>  
+  <generalization id="39">    
+    <bendpoint x="1626" y="192"/>    
+    <end type="SOURCE" refId="24"/>    
+    <end type="TARGET" refId="23"/>  
+  </generalization>  
+  <generalization id="40">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="26"/>  
+  </generalization>  
+  <generalization id="41">    
+    <end type="SOURCE" refId="18"/>    
+    <end type="TARGET" refId="26"/>  
+  </generalization>  
+  <realization id="42">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="25"/>  
+  </realization>  
+  <association id="43">    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="44" name="central">        
+        <position height="0" width="0" x="-415" y="-97"/>      
+      </attribute>      
+      <multiplicity id="45" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-415" y="-97"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="11" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="46">    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="47" name="depositSlot">        
+        <position height="0" width="0" x="-414" y="-262"/>      
+      </attribute>      
+      <multiplicity id="48" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-414" y="-262"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="22" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="49">    
+    <end type="SOURCE" refId="12"/>    
+    <end type="TARGET" refId="26"/>  
+  </generalization>  
+  <association id="50">    
+    <end type="SOURCE" refId="24" navigable="false">      
+      <attribute id="51" name="cashDispenser">        
+        <position height="0" width="0" x="-175" y="-238"/>      
+      </attribute>      
+      <multiplicity id="52" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-175" y="-238"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="19" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="53">    
+    <end type="SOURCE" refId="22"/>    
+    <end type="TARGET" refId="26"/>  
+  </generalization>  
+  <association id="54">    
+    <bendpoint x="2196" y="222"/>    
+    <end type="SOURCE" refId="21" navigable="false">      
+      <attribute id="55" name="depositSlot">        
+        <position height="0" width="0" x="-414" y="-262"/>      
+      </attribute>      
+      <multiplicity id="56" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-414" y="-262"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="22" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="57">    
+    <end type="SOURCE" refId="21"/>    
+    <end type="TARGET" refId="20"/>  
+  </nesting>  
+  <realization id="58">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="25"/>  
+  </realization>  
+  <generalization id="59">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="26"/>  
+  </generalization>  
+  <association id="60">    
+    <end type="SOURCE" refId="18" navigable="false">      
+      <attribute id="61" name="accounts">        
+        <position height="0" width="0" x="-258" y="-43"/>      
+      </attribute>      
+      <multiplicity id="62" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="-258" y="-43"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="15" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="63">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="26"/>  
+  </generalization>  
+  <realization id="64">    
+    <end type="SOURCE" refId="21"/>    
+    <end type="TARGET" refId="25"/>  
+  </realization>  
+  <generalization id="65">    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="26"/>  
+  </generalization>  
+  <realization id="66">    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="25"/>  
+  </realization>  
+  <generalization id="67">    
+    <end type="SOURCE" refId="14"/>    
+    <end type="TARGET" refId="26"/>  
+  </generalization>  
+  <generalization id="68">    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="26"/>  
+  </generalization>  
+  <association id="69">    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="70" name="cashDispenser">        
+        <position height="0" width="0" x="-175" y="-238"/>      
+      </attribute>      
+      <multiplicity id="71" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-175" y="-238"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="19" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="72">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="26"/>  
+  </generalization>  
+  <generalization id="73">    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="26"/>  
+  </generalization>  
+  <association id="74">    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="75" name="optionWindow">        
+        <position height="0" width="0" x="-296" y="-281"/>      
+      </attribute>      
+      <multiplicity id="76" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-296" y="-281"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="77">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="25"/>  
+  </realization>  
+  <generalization id="78">    
+    <end type="SOURCE" refId="21"/>    
+    <end type="TARGET" refId="23"/>  
+  </generalization>  
+  <realization id="79">    
+    <end type="SOURCE" refId="12"/>    
+    <end type="TARGET" refId="25"/>  
+  </realization>  
+  <realization id="80">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="25"/>  
+  </realization>  
+  <realization id="81">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="25"/>  
+  </realization>  
+  <realization id="82">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="25"/>  
+  </realization>  
+  <generalization id="83">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="26"/>  
+  </generalization>  
+  <generalization id="84">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="26"/>  
+  </generalization>  
+  <realization id="85">    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="25"/>  
+  </realization>  
+  <generalization id="86">    
+    <end type="SOURCE" refId="23"/>    
+    <end type="TARGET" refId="26"/>  
+  </generalization>  
+  <realization id="87">    
+    <end type="SOURCE" refId="20"/>    
+    <end type="TARGET" refId="25"/>  
+  </realization>  
+  <realization id="88">    
+    <end type="SOURCE" refId="14"/>    
+    <end type="TARGET" refId="25"/>  
+  </realization>  
+  <association id="89">    
+    <end type="SOURCE" refId="23" navigable="false">      
+      <attribute id="90" name="bankDatabase">        
+        <position height="0" width="0" x="33" y="-10"/>      
+      </attribute>      
+      <multiplicity id="91" minimum="0" maximum="1">        
+        <position height="0" width="0" x="33" y="-10"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="18" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    sort-features="false" accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
