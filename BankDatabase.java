@@ -6,22 +6,20 @@ import java.util.ArrayList;
 public class BankDatabase
 {
 private Account accounts[]; // array of Accounts
-protected static ArrayList<String> promo;
 // no-argument BankDatabase constructor initializes accounts
 public BankDatabase()
 {
-   accounts = new Account[ 2 ]; // just 2 accounts for testing
-   accounts[ 0 ] = new Account( 12345, 54321, 1000.0, 1200.0 );
+   accounts = new Account[ 10 ]; // just 2 accounts for testing
+   accounts[ 0 ] = new Account(12345, 54321, 1000.0, 1200.0 );
    accounts[ 1 ] = new Account( 98765, 56789, 200.0, 200.0 );  
-   
-  promo = new ArrayList<>(); 
-   
-   for(int i = 0; i < accounts.length;i++)
-   {
-	   promo.add(Integer.toString(accounts[i].getAccountNumber()));
-	   promo.add("");
-   }
-   System.out.println(promo);
+   accounts[2] = new Account(32342,98928,5493.00,100.00);
+   accounts[3] = new Account(23232,83123,900.00,502.00);
+   accounts[4] = new Account(12323,10292,1000.00,3000.00);
+   accounts[5] = new Account(90922,12323,10002.00,400.00);
+   accounts[6] = new Account(10232,43454,5000.00,400.00);
+   accounts[7] = new Account(34342,12321,700.00,400.00);
+   accounts[8] = new Account(10223,45342,6000.00,500.00);
+   accounts[9] = new Account(43434,12323,7000.00,500.00);
 } // end no-argument BankDatabase constructor
 
 // retrieve Account object containing specified account number

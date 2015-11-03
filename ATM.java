@@ -232,6 +232,7 @@ class submitPromotions implements ActionListener
 		if(ATM.promotions.size()==5)
 		{
 			promotionWindow.promotionWindow.setVisible(false);
+			JOptionPane.showMessageDialog(null, "Thank you for choosing the promotions. We will inform you once the promotions are online.");
 			OptionWindow optionWindow = new OptionWindow();
 		    optionWindow.startOptionWindow();	
 		    int timeout_ms = 10000;//10 * 1000
@@ -267,7 +268,9 @@ class displayPromotion extends TimerTask
 		{
 			int randomNum = randomNumber.nextInt(5)+1;
 			if(ATM.promotions.indexOf(randomNum)!= -1)
-			{
+			{	
+				message += String.format("%n%s%n%n", "                  "
+						+ "Promotion available!!");
 				message += promotionsDetail.get(randomNum);
 				JOptionPane.showMessageDialog(null, message);
 				promotionPresent = false;
@@ -301,7 +304,6 @@ class promotion1 implements ActionListener
 		{
 			JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
 		}
-		System.out.println(ATM.promotions);
 	}
 }
 class promotion2 implements ActionListener
@@ -323,7 +325,6 @@ class promotion2 implements ActionListener
 		{
 			JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
 		}
-		System.out.println(ATM.promotions);
 	}
 }
 class promotion3 implements ActionListener
@@ -345,7 +346,6 @@ class promotion3 implements ActionListener
 		{
 			JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
 		}		
-		System.out.println(ATM.promotions);
 	}
 }
 class promotion4 implements ActionListener
@@ -367,7 +367,6 @@ class promotion4 implements ActionListener
 		{
 			JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
 		}		
-		System.out.println(ATM.promotions);
 	}
 }
 class promotion5 implements ActionListener
@@ -389,7 +388,6 @@ class promotion5 implements ActionListener
 		{
 			JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
 		}
-		System.out.println(ATM.promotions);
 	}
 }
 class promotion6 implements ActionListener
@@ -411,7 +409,6 @@ class promotion6 implements ActionListener
 		{
 			JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
 		}		
-		System.out.println(ATM.promotions);
 	}
 }
 class promotion7 implements ActionListener
@@ -422,7 +419,7 @@ class promotion7 implements ActionListener
 		{
 			if(ATM.promotions.indexOf(7) == -1)
 			{
-				ATM.promotions.add(7);	
+				ATM.promotions.add(7);
 			}
 			else
 			{
@@ -454,7 +451,6 @@ class promotion8 implements ActionListener
 		{
 			JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
 		}
-		System.out.println(ATM.promotions);
 	}
 }
 class promotion9 implements ActionListener
@@ -476,7 +472,6 @@ class promotion9 implements ActionListener
 		{
 			JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
 		}
-		System.out.println(ATM.promotions);
 	}
 }
 class promotion10 implements ActionListener
@@ -498,16 +493,9 @@ class promotion10 implements ActionListener
 		{
 			JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
 		}
-		System.out.println(ATM.promotions);
 	}
 }
-class promotionListAction
-{
-	public void startPromotionList()
-	{
-		System.out.println("Thank you for choosing the promotions. We will inform you once the promotions are online.");
-	}
-}
+
 
 class OptionWindow
 {
@@ -599,18 +587,9 @@ class authenticateUser implements ActionListener
 			    		  "9. Fly around world with your travel credit card and get extra miles on every fly",
 			    		  "10. Earn 9% cashback ");
 			      JOptionPane.showMessageDialog(null,promotions);
-			      int indexNumber = BankDatabase.promo.indexOf(Integer.toString(accountNumber));
-			      int promoNumber = indexNumber+1;
-			      if(BankDatabase.promo.get(promoNumber)=="")
-			      {
-			    	  promotionWindow promo = new promotionWindow();
-			    	  promo.startPromotionWindow();
-			      }
-			      else
-			      {
-			    	  OptionWindow optionWindow = new OptionWindow();
-					    optionWindow.startOptionWindow();
-			      }
+			      
+			      promotionWindow promo = new promotionWindow();
+			      promo.startPromotionWindow();
 			   } // end if
 			   else
 			   {
