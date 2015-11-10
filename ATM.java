@@ -37,7 +37,7 @@ public class ATM
 	protected static DepositSlot depositSlot; // ATM's deposit slot
 	protected static BankDatabase bankDatabase; // account information database
 	protected static boolean showWindow = true;
-
+	
 // no-argument ATM constructor initializes instance variables
 public ATM() 
 {
@@ -53,6 +53,8 @@ public ATM()
 // start ATM 
 public void run()
 {
+	BankDatabase too = new BankDatabase();
+	
    // welcome and authenticate user; perform transactions
 	if(showWindow)
 	{
@@ -588,8 +590,12 @@ class authenticateUser implements ActionListener
 			    		  "10. Earn 9% cashback ");
 			      JOptionPane.showMessageDialog(null,promotions);
 			      
+			      customerMultiThreading.runThread();
+			      JOptionPane.showMessageDialog(null, customerMultiThreading.message);
 			      promotionWindow promo = new promotionWindow();
 			      promo.startPromotionWindow();
+			      
+			      
 			   } // end if
 			   else
 			   {

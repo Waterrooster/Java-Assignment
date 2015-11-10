@@ -9,15 +9,18 @@ private int accountNumber; // account number
 private int pin; // PIN for authentication
 protected double availableBalance; // funds available for withdrawal
 protected double totalBalance; // funds available + pending deposits
-
+protected String firstName;
+protected String lastName;
 // Account constructor initializes attributes
 public Account( int theAccountNumber, int thePIN, 
-   double theAvailableBalance, double theTotalBalance )
+   double theAvailableBalance, double theTotalBalance,String fName, String lName )
 {
    accountNumber = theAccountNumber;
    pin = thePIN;
    availableBalance = theAvailableBalance;
    totalBalance = theTotalBalance;
+   firstName = fName;
+   lastName = lName;
 } // end Account constructor
 
 // determines whether a user-specified PIN matches PIN in Account
@@ -29,6 +32,18 @@ public boolean validatePIN( int userPIN )
       return false;
 } // end method validatePIN
 
+public String getFirstName()
+{
+	return firstName;
+}
+public String getLastName()
+{
+	return lastName;
+}
+public String getName()
+{
+	return getFirstName() + " " + getLastName();
+}
 // returns available balance
 public double getAvailableBalance()
 {
@@ -40,6 +55,7 @@ public double getTotalBalance()
 {
    return totalBalance;
 } // end method getTotalBalance
+
 
 // credits an amount to the account
 public void credit( double amount )
