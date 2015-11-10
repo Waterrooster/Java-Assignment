@@ -20,14 +20,14 @@ public class customerMultiThreading implements Runnable{
 		// TODO Auto-generated method stub
 		
 		synchronized (message) {
-			message += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s  %n",Thread.currentThread().getId(),customerName,Thread.currentThread().getState());
+			message += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s  %n%n",Thread.currentThread().getId(),customerName,Thread.currentThread().getState());
 		try{
 			message += String.format("Thread: %d went to sleep for 10 seconds.%n%n", Thread.currentThread().getId());
 			Thread.sleep(10, 0);
 		}catch(InterruptedException e)
 		{
 			
-		}
+		}  
 		}
 	}
 	

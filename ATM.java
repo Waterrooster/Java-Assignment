@@ -50,53 +50,19 @@ public ATM()
    
 } // end no-argument ATM constructor
 
-// start ATM 
-public void run()
-{
-	BankDatabase too = new BankDatabase();
-	
-   // welcome and authenticate user; perform transactions
-	if(showWindow)
-	{
-		central.startWindow();
-		if(userAuthenticated)
-		{
-			performTransactions();
-		}
-		userAuthenticated = false;
-		currentAccountNumber = 0;
-	}
-}
-// attempts to authenticate user against database
-
-// display the main menu and perform transactions
-private void performTransactions() 
-{
-   
-   boolean userExited = false; // user has not chosen to exit
-
-   // loop while user has not chosen option to exit system
-   if( !userExited )
-   {     
-      // show main menu and get user selection
-	   AtmMain.frame.setVisible(false);
-	   OptionWindow.frame2.setVisible(true);
-	   
-   } // end while
-} // end method performTransactions
 
 } // end class ATM
 
-class AtmMain
+class AtmMain implements ActionListener
 {
 
-	static JFrame frame = new JFrame("Bank window");
+	protected static JFrame frame = new JFrame("Bank window");
 	protected static JPanel panel = new JPanel();
 	protected static JTextField usernameInput;
 	protected static JTextField passwordInput;
 	protected static JButton verify;
-	public void startWindow()
-	{
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
 			frame.add(panel);
 			JLabel label = new JLabel("Welcome");
 			JLabel label1 = new JLabel("Account number");
@@ -158,6 +124,7 @@ class AtmMain
 			   frame.setLocation(dim.width/2-frame.getSize().width/2, dim.height/2-frame.getSize().height/2);
 			   
 			   verify.addActionListener(new authenticateUser());
+			
 	}
 	
 }
@@ -248,256 +215,6 @@ class submitPromotions implements ActionListener
 	}
 }
 
-class displayPromotion extends TimerTask
-{
-	public void run()
-	{
-		ArrayList<String> promotionsDetail = new ArrayList<>();
-		promotionsDetail.add("Get 10% cash back offer on every purchase at shopping malls");
-		promotionsDetail.add("Deposit 10,000$ within first 10 days of opening a new account and get 200$ back");
-		promotionsDetail.add("Get 20% cashback on every purchase at dining services");
-		promotionsDetail.add("Spend 500$ at any disney store with disney card and get 20% cashback");
-		promotionsDetail.add("Create a new student account for your child and get 5% on every purchase on school suplies");
-		promotionsDetail.add("Get a new travel rewards card and earn 5000 miles in Emirates airlines");
-		promotionsDetail.add("Apply for new credit card before festival and get 10% discount on any purchase during festival");
-		promotionsDetail.add("Deposit 1000$ in your child student account and get 30% cashback on every purchase on school supplies");
-		promotionsDetail.add("Fly around world with your travel credit card and get extra miles on every fly");
-		promotionsDetail.add("Earn 9% cashback");
-		String message = "";
-		Random randomNumber = new Random();
-		boolean promotionPresent = true;
-		while(promotionPresent)
-		{
-			int randomNum = randomNumber.nextInt(5)+1;
-			if(ATM.promotions.indexOf(randomNum)!= -1)
-			{	
-				message += String.format("%n%s%n%n", "                  "
-						+ "Promotion available!!");
-				message += promotionsDetail.get(randomNum);
-				JOptionPane.showMessageDialog(null, message);
-				promotionPresent = false;
-			}
-		}
-	}
-}
-class defaultPromoMessage implements ActionListener
-{
-	public void actionPerformed(ActionEvent e)
-	{
-		JOptionPane.showMessageDialog(null,"Please choose another promotion.");
-	}
-}
-class promotion1 implements ActionListener
-{
-	public void actionPerformed(ActionEvent e)
-	{
-		if(ATM.promotions.size()<5)
-		{
-			if(ATM.promotions.indexOf(1) == -1)
-			{
-				ATM.promotions.add(1);	
-			}
-			else
-			{
-				JOptionPane.showMessageDialog(null, "Please choose another promotion");
-			}	
-		}
-		else
-		{
-			JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
-		}
-	}
-}
-class promotion2 implements ActionListener
-{
-	public void actionPerformed(ActionEvent e)
-	{
-		if(ATM.promotions.size()<5)
-		{
-			if(ATM.promotions.indexOf(2) == -1)
-			{
-				ATM.promotions.add(2);	
-			}
-			else
-			{
-				JOptionPane.showMessageDialog(null, "Please choose another promotion");
-			}	
-		}
-		else
-		{
-			JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
-		}
-	}
-}
-class promotion3 implements ActionListener
-{
-	public void actionPerformed(ActionEvent e)
-	{
-		if(ATM.promotions.size()<5)
-		{
-			if(ATM.promotions.indexOf(3) == -1)
-			{
-				ATM.promotions.add(3);	
-			}
-			else
-			{
-				JOptionPane.showMessageDialog(null, "Please choose another promotion");
-			}	
-		}
-		else
-		{
-			JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
-		}		
-	}
-}
-class promotion4 implements ActionListener
-{
-	public void actionPerformed(ActionEvent e)
-	{
-		if(ATM.promotions.size()<5)
-		{
-			if(ATM.promotions.indexOf(4) == -1)
-			{
-				ATM.promotions.add(4);	
-			}
-			else
-			{
-				JOptionPane.showMessageDialog(null, "Please choose another promotion");
-			}	
-		}
-		else
-		{
-			JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
-		}		
-	}
-}
-class promotion5 implements ActionListener
-{
-	public void actionPerformed(ActionEvent e)
-	{
-		if(ATM.promotions.size()<5)
-		{
-			if(ATM.promotions.indexOf(5) == -1)
-			{
-				ATM.promotions.add(5);	
-			}
-			else
-			{
-				JOptionPane.showMessageDialog(null, "Please choose another promotion");
-			}	
-		}
-		else
-		{
-			JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
-		}
-	}
-}
-class promotion6 implements ActionListener
-{
-	public void actionPerformed(ActionEvent e)
-	{
-		if(ATM.promotions.size()<5)
-		{
-			if(ATM.promotions.indexOf(6) == -1)
-			{
-				ATM.promotions.add(6);	
-			}
-			else
-			{
-				JOptionPane.showMessageDialog(null, "Please choose another promotion");
-			}	
-		}
-		else
-		{
-			JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
-		}		
-	}
-}
-class promotion7 implements ActionListener
-{
-	public void actionPerformed(ActionEvent e)
-	{
-		if(ATM.promotions.size()<5)
-		{
-			if(ATM.promotions.indexOf(7) == -1)
-			{
-				ATM.promotions.add(7);
-			}
-			else
-			{
-				JOptionPane.showMessageDialog(null, "Please choose another promotion");
-			}	
-		}
-		else
-		{
-			JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
-		}
-	}
-}
-class promotion8 implements ActionListener
-{
-	public void actionPerformed(ActionEvent e)
-	{
-		if(ATM.promotions.size()<5)
-		{
-			if(ATM.promotions.indexOf(8) == -1)
-			{
-				ATM.promotions.add(8);	
-			}
-			else
-			{
-				JOptionPane.showMessageDialog(null, "Please choose another promotion");
-			}	
-		}
-		else
-		{
-			JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
-		}
-	}
-}
-class promotion9 implements ActionListener
-{
-	public void actionPerformed(ActionEvent e)
-	{
-		if(ATM.promotions.size()<5)
-		{
-			if(ATM.promotions.indexOf(9) == -1)
-			{
-				ATM.promotions.add(9);	
-			}
-			else
-			{
-				JOptionPane.showMessageDialog(null, "Please choose another promotion");
-			}	
-		}
-		else
-		{
-			JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
-		}
-	}
-}
-class promotion10 implements ActionListener
-{
-	public void actionPerformed(ActionEvent e)
-	{
-		if(ATM.promotions.size()<5)
-		{
-			if(ATM.promotions.indexOf(10) == -1)
-			{
-				ATM.promotions.add(10);	
-			}
-			else
-			{
-				JOptionPane.showMessageDialog(null, "Please choose another promotion");
-			}	
-		}
-		else
-		{
-			JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
-		}
-	}
-}
-
 
 class OptionWindow
 {
@@ -559,8 +276,26 @@ class OptionWindow
 	}
 }
 
+class closeWindow implements ActionListener
+{
+	@Override
+	public void actionPerformed(ActionEvent e)
+	{
+		System.exit(0);
+	}
+}
+class messageWindow implements ActionListener
+{
+	@Override
+	public void actionPerformed(ActionEvent e)
+	{
+		JOptionPane.showMessageDialog(null, "You can only spawn upto 10 customers");
+	}
+}
+
 class authenticateUser implements ActionListener 
 {
+
 	public void actionPerformed(ActionEvent e)
 	{
 		try
@@ -589,18 +324,14 @@ class authenticateUser implements ActionListener
 			    		  "9. Fly around world with your travel credit card and get extra miles on every fly",
 			    		  "10. Earn 9% cashback ");
 			      JOptionPane.showMessageDialog(null,promotions);
-			      
-			      customerMultiThreading.runThread();
-			      JOptionPane.showMessageDialog(null, customerMultiThreading.message);
 			      promotionWindow promo = new promotionWindow();
 			      promo.startPromotionWindow();
-			      
-			      
 			   } // end if
 			   else
 			   {
 				   JOptionPane.showMessageDialog(null,"Invalid Account number or Pin. Please try again!");
 			   }	
+			    
 		}catch(Exception error){
 			JOptionPane.showMessageDialog(null,"Please provide valid account details");
 		}
@@ -973,6 +704,256 @@ class cancelButton implements ActionListener
 		OptionWindow.frame2.setVisible(true);
 	}
 }
+class displayPromotion extends TimerTask
+{
+	public void run()
+	{
+		ArrayList<String> promotionsDetail = new ArrayList<>();
+		promotionsDetail.add("Get 10% cash back offer on every purchase at shopping malls");
+		promotionsDetail.add("Deposit 10,000$ within first 10 days of opening a new account and get 200$ back");
+		promotionsDetail.add("Get 20% cashback on every purchase at dining services");
+		promotionsDetail.add("Spend 500$ at any disney store with disney card and get 20% cashback");
+		promotionsDetail.add("Create a new student account for your child and get 5% on every purchase on school suplies");
+		promotionsDetail.add("Get a new travel rewards card and earn 5000 miles in Emirates airlines");
+		promotionsDetail.add("Apply for new credit card before festival and get 10% discount on any purchase during festival");
+		promotionsDetail.add("Deposit 1000$ in your child student account and get 30% cashback on every purchase on school supplies");
+		promotionsDetail.add("Fly around world with your travel credit card and get extra miles on every fly");
+		promotionsDetail.add("Earn 9% cashback");
+		String message = "";
+		Random randomNumber = new Random();
+		boolean promotionPresent = true;
+		while(promotionPresent)
+		{
+			int randomNum = randomNumber.nextInt(5)+1;
+			if(ATM.promotions.indexOf(randomNum)!= -1)
+			{	
+				message += String.format("%n%s%n%n", "                  "
+						+ "Promotion available!!");
+				message += promotionsDetail.get(randomNum);
+				JOptionPane.showMessageDialog(null, message);
+				promotionPresent = false;
+			}
+		}
+	}
+}
+class defaultPromoMessage implements ActionListener
+{
+	public void actionPerformed(ActionEvent e)
+	{
+		JOptionPane.showMessageDialog(null,"Please choose another promotion.");
+	}
+}
+class promotion1 implements ActionListener
+{
+	public void actionPerformed(ActionEvent e)
+	{
+		if(ATM.promotions.size()<5)
+		{
+			if(ATM.promotions.indexOf(1) == -1)
+			{
+				ATM.promotions.add(1);	
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(null, "Please choose another promotion");
+			}	
+		}
+		else
+		{
+			JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
+		}
+	}
+}
+class promotion2 implements ActionListener
+{
+	public void actionPerformed(ActionEvent e)
+	{
+		if(ATM.promotions.size()<5)
+		{
+			if(ATM.promotions.indexOf(2) == -1)
+			{
+				ATM.promotions.add(2);	
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(null, "Please choose another promotion");
+			}	
+		}
+		else
+		{
+			JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
+		}
+	}
+}
+class promotion3 implements ActionListener
+{
+	public void actionPerformed(ActionEvent e)
+	{
+		if(ATM.promotions.size()<5)
+		{
+			if(ATM.promotions.indexOf(3) == -1)
+			{
+				ATM.promotions.add(3);	
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(null, "Please choose another promotion");
+			}	
+		}
+		else
+		{
+			JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
+		}		
+	}
+}
+class promotion4 implements ActionListener
+{
+	public void actionPerformed(ActionEvent e)
+	{
+		if(ATM.promotions.size()<5)
+		{
+			if(ATM.promotions.indexOf(4) == -1)
+			{
+				ATM.promotions.add(4);	
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(null, "Please choose another promotion");
+			}	
+		}
+		else
+		{
+			JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
+		}		
+	}
+}
+class promotion5 implements ActionListener
+{
+	public void actionPerformed(ActionEvent e)
+	{
+		if(ATM.promotions.size()<5)
+		{
+			if(ATM.promotions.indexOf(5) == -1)
+			{
+				ATM.promotions.add(5);	
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(null, "Please choose another promotion");
+			}	
+		}
+		else
+		{
+			JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
+		}
+	}
+}
+class promotion6 implements ActionListener
+{
+	public void actionPerformed(ActionEvent e)
+	{
+		if(ATM.promotions.size()<5)
+		{
+			if(ATM.promotions.indexOf(6) == -1)
+			{
+				ATM.promotions.add(6);	
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(null, "Please choose another promotion");
+			}	
+		}
+		else
+		{
+			JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
+		}		
+	}
+}
+class promotion7 implements ActionListener
+{
+	public void actionPerformed(ActionEvent e)
+	{
+		if(ATM.promotions.size()<5)
+		{
+			if(ATM.promotions.indexOf(7) == -1)
+			{
+				ATM.promotions.add(7);
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(null, "Please choose another promotion");
+			}	
+		}
+		else
+		{
+			JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
+		}
+	}
+}
+class promotion8 implements ActionListener
+{
+	public void actionPerformed(ActionEvent e)
+	{
+		if(ATM.promotions.size()<5)
+		{
+			if(ATM.promotions.indexOf(8) == -1)
+			{
+				ATM.promotions.add(8);	
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(null, "Please choose another promotion");
+			}	
+		}
+		else
+		{
+			JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
+		}
+	}
+}
+class promotion9 implements ActionListener
+{
+	public void actionPerformed(ActionEvent e)
+	{
+		if(ATM.promotions.size()<5)
+		{
+			if(ATM.promotions.indexOf(9) == -1)
+			{
+				ATM.promotions.add(9);	
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(null, "Please choose another promotion");
+			}	
+		}
+		else
+		{
+			JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
+		}
+	}
+}
+class promotion10 implements ActionListener
+{
+	public void actionPerformed(ActionEvent e)
+	{
+		if(ATM.promotions.size()<5)
+		{
+			if(ATM.promotions.indexOf(10) == -1)
+			{
+				ATM.promotions.add(10);	
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(null, "Please choose another promotion");
+			}	
+		}
+		else
+		{
+			JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
+		}
+	}
+}
+
 
 class exitTheSystem implements ActionListener
 {
