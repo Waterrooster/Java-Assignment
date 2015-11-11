@@ -1,12 +1,14 @@
 package atm;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class customerMultiThreading implements Runnable{
-	private Thread t;
-	private String threadName;
 	private String customerName;
 	protected static String message = "";
 	
@@ -18,27 +20,24 @@ public class customerMultiThreading implements Runnable{
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		Date date = new Date();
+		DateFormat time = new SimpleDateFormat("HH:mm:ss");
+		Calendar cal = Calendar.getInstance();
+
 		synchronized (message) {
-			message += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s  %n",Thread.currentThread().getId(),customerName,Thread.currentThread().getState());
+			message += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s  %s %n",Thread.currentThread().getId(),customerName,Thread.currentThread().getState(), dateFormat.format(date),time.format(cal.getTime()));
 		try{
-			message += String.format("Thread: %d went to sleep for 10 seconds.%n%n", Thread.currentThread().getId());
-			Thread.sleep(10, 0);
+			Thread.sleep(10000, 0);
 		}catch(InterruptedException e)
 		{
 			
 		}
+		message += String.format("Thread: %d went to sleep for 10 seconds.End time: %s  %s%n%n", Thread.currentThread().getId(),dateFormat.format(date),time.format(cal.getTime()));
 		}
 	}
 	
-	public void start()
-	{
-		if(this.t == null)
-		{
-			t = new Thread(this, this.threadName);
-			t.start();
-		}
-	}
+	
 	public static void runThread()
 	{
 		BankDatabase bankDB = new BankDatabase();
@@ -48,16 +47,15 @@ public class customerMultiThreading implements Runnable{
 		{
 			String customerName = bankDB.accounts[i].getName();
 			e.execute(new customerMultiThreading(customerName));
+	
 		}
 		
 		e.shutdown();
 		try {
-			e.awaitTermination(10, TimeUnit.SECONDS);
+			e.awaitTermination(10, TimeUnit.MINUTES);
 		} catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
-		
 	}
 }

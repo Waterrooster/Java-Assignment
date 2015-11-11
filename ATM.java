@@ -36,7 +36,6 @@ public class ATM
 	protected static CashDispenser cashDispenser; // ATM's cash dispenser
 	protected static DepositSlot depositSlot; // ATM's deposit slot
 	protected static BankDatabase bankDatabase; // account information database
-	protected static boolean showWindow = true;
 	
 // no-argument ATM constructor initializes instance variables
 public ATM() 
@@ -56,8 +55,6 @@ public void run()
 	BankDatabase too = new BankDatabase();
 	
    // welcome and authenticate user; perform transactions
-	if(showWindow)
-	{
 		central.startWindow();
 		if(userAuthenticated)
 		{
@@ -65,7 +62,7 @@ public void run()
 		}
 		userAuthenticated = false;
 		currentAccountNumber = 0;
-	}
+	
 }
 // attempts to authenticate user against database
 
