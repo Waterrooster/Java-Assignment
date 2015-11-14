@@ -23,46 +23,46 @@ import java.util.TimerTask;
 //ATM.java
 //Represents an automated teller machine
 
-public class ATM 
+public class ATM implements Runnable
 {
-	protected static ArrayList<Integer> promotions = new ArrayList<>();
-	protected static ArrayList<String> data= new ArrayList<>();
-	protected static String message = "";
-	
-	protected static boolean userAuthenticated; // whether user is authenticated
-	protected static int currentAccountNumber; // current user's account number
-	protected static AtmMain central;
-	protected static OptionWindow optionWindow = new OptionWindow();
-	protected static CashDispenser cashDispenser; // ATM's cash dispenser
-	protected static DepositSlot depositSlot; // ATM's deposit slot
-	protected static BankDatabase bankDatabase; // account information database
-	
+	Account account;
 // no-argument ATM constructor initializes instance variables
 public ATM() 
 {
-   userAuthenticated = false; // user is not authenticated to start
+	 ArrayList<Integer> promotions = new ArrayList<>();
+	 ArrayList<String> data= new ArrayList<>();
+	 String message = "";
+	
+	 boolean userAuthenticated; // whether user is authenticated
+	 int currentAccountNumber; // current user's account number
+	 OptionWindow optionWindow = new OptionWindow();
+	 CashDispenser cashDispenser; // ATM's cash dispenser
+	 DepositSlot depositSlot; // ATM's deposit slot
+	 BankDatabase bankDatabase; // account information database
+
+	
+	userAuthenticated = false; // user is not authenticated to start
    currentAccountNumber = 0; // no current account number to start
-   central = new AtmMain();
    cashDispenser = new CashDispenser(); // create cash dispenser
    depositSlot = new DepositSlot(); // create deposit slot
    bankDatabase = new BankDatabase(); // create acct info database
    
 } // end no-argument ATM constructor
 
+public ATM(Account acc)
+{
+	this.account = acc;
+}
 // start ATM 
 public void run()
 {
-	BankDatabase too = new BankDatabase();
-	
-   // welcome and authenticate user; perform transactions
-		central.startWindow();
+		startWindow();
 		if(userAuthenticated)
 		{
 			performTransactions();
 		}
 		userAuthenticated = false;
 		currentAccountNumber = 0;
-	
 }
 // attempts to authenticate user against database
 
@@ -84,18 +84,20 @@ private void performTransactions()
 
 } // end class ATM
 
-class AtmMain
-{
-
-	static JFrame frame = new JFrame("Bank window");
-	protected static JPanel panel = new JPanel();
-	protected static JTextField usernameInput;
-	protected static JTextField passwordInput;
-	protected static JButton verify;
+JTextField usernameInput;
+JTextField passwordInput;
+JFrame frame;
 	public void startWindow()
 	{
-			frame.add(panel);
-			JLabel label = new JLabel("Welcome");
+
+		frame = new JFrame("Bank window");
+		JPanel panel = new JPanel();
+		
+		JButton verify;
+
+		frame.add(panel);
+		
+		JLabel label = new JLabel("Welcome");
 			JLabel label1 = new JLabel("Account number");
 			JLabel label2 = new JLabel("Password");
 			usernameInput = new JTextField();
@@ -154,28 +156,78 @@ class AtmMain
 			   Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 			   frame.setLocation(dim.width/2-frame.getSize().width/2, dim.height/2-frame.getSize().height/2);
 			   
-			   verify.addActionListener(new authenticateUser());
+			   verify.addActionListener(new ActionListener() {
+				   public void actionPerformed(ActionEvent e) {
+					   authenticate();
+				   }
+			   });
 	}
 	
-}
 
+	boolean userAuthenticated = false;
+	void authenticate() {
+		try
+		{
+			int accountNumber = Integer.parseInt(usernameInput.getText());// input account number
+			   int pin = Integer.parseInt(passwordInput.getText()); // input PIN
+			   
+			   
+			   // set userAuthenticated to boolean value returned by database
+			   userAuthenticated = 
+			      BankDatabase.authenticateUser( accountNumber, pin );
+			   
+			   // check whether authentication succeeded
+			   if (userAuthenticated )
+			   {
+			      frame.setVisible(false);
+			      String promotions = String.format("%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n","1. Get 10% cash back offer on every purchase at shopping malls",
+			    		  "2. Deposit 10,000$ within first 10 days of opening a new account and get 200$ back",
+			    		  "3. Get 20% cashback on every purchase at dining services",
+			    		  "4. Spend 500$ at any disney store with disney card and get 20% cashback",
+			    		  "5. Create a new student account for your child and get 5% on every purchase on school suplies",
+			    		  "6. Get a new travel rewards card and earn 5000 miles in Emirates airlines",
+			    		  "7. Apply for new credit card before festival and get 10% discount on any purchase during festival.",
+			    		  "8. Deposit 1000$ in your child student account and get 30% cashback on every purchase on school supplies",
+			    		  "9. Fly around world with your travel credit card and get extra miles on every fly",
+			    		  "10. Earn 9% cashback ");
+			      JOptionPane.showMessageDialog(null,promotions);
+			      
+//			      customerMultiThreading.runThread();
+//			      JOptionPane.showMessageDialog(null, customerMultiThreading.message);
+			      promotionWindow promo = new promotionWindow();
+			      promo.startPromotionWindow();
+			      
+			      
+			   } // end if
+			   else
+			   {
+				   JOptionPane.showMessageDialog(null,"Invalid Account number or Pin. Please try again!");
+			   }	
+		}catch(Exception error){
+			JOptionPane.showMessageDialog(null,"Please provide valid account details");
+		}
+	}
+	
 class promotionWindow
 {
-	protected static JFrame promotionWindow = new JFrame("Promotions");
-	protected static JButton submit;
-	protected static JButton promo1;
-	protected static JButton promo2;
-	protected static JButton promo3;
-	protected static JButton promo4;
-	protected static JButton promo5;
-	protected static JButton promo6;
-	protected static JButton promo7;
-	protected static JButton promo8;
-	protected static JButton promo9;
-	protected static JButton promo10;
 	
 	public void startPromotionWindow()
 	{
+
+		 JFrame promotionWindow = new JFrame("Promotions");
+		 JButton submit;
+		 JButton promo1;
+		 JButton promo2;
+		 JButton promo3;
+		 JButton promo4;
+		 JButton promo5;
+		 JButton promo6;
+		 JButton promo7;
+		 JButton promo8;
+		 JButton promo9;
+		 JButton promo10;
+
+		
 		JPanel panel = new JPanel();
 		
 		promo1 = new JButton("Promo-1");
@@ -498,14 +550,18 @@ class promotion10 implements ActionListener
 
 class OptionWindow
 {
-	static JFrame frame2 = new JFrame("Option Window");
-	protected static JButton balance;
-	protected static JButton deposit;
-	protected static JButton withdrawal;
-	protected static JButton exit;
-	protected static JButton statement;
-	public void startOptionWindow() {
-	    JPanel panel = new JPanel();
+		public void startOptionWindow() {
+	
+			static JFrame frame2 = new JFrame("Option Window");
+			 JButton balance;
+			 JButton deposit;
+			 JButton withdrawal;
+			 JButton exit;
+			 JButton statement;
+
+			
+			
+			JPanel panel = new JPanel();
 		balance  = new JButton("Balance");
 		deposit = new JButton("Deposit");
 		withdrawal = new JButton("Withdrawal");
@@ -560,47 +616,7 @@ class authenticateUser implements ActionListener
 {
 	public void actionPerformed(ActionEvent e)
 	{
-		try
-		{
-			int accountNumber = Integer.parseInt(AtmMain.usernameInput.getText());// input account number
-			   int pin = Integer.parseInt(AtmMain.passwordInput.getText()); // input PIN
-			   
-			   
-			   // set userAuthenticated to boolean value returned by database
-			   ATM.userAuthenticated = 
-			      ATM.bankDatabase.authenticateUser( accountNumber, pin );
-			   
-			   // check whether authentication succeeded
-			   if ( ATM.userAuthenticated )
-			   {
-			      ATM.currentAccountNumber = accountNumber; // save user's account #
-			      AtmMain.frame.setVisible(false);
-			      String promotions = String.format("%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n","1. Get 10% cash back offer on every purchase at shopping malls",
-			    		  "2. Deposit 10,000$ within first 10 days of opening a new account and get 200$ back",
-			    		  "3. Get 20% cashback on every purchase at dining services",
-			    		  "4. Spend 500$ at any disney store with disney card and get 20% cashback",
-			    		  "5. Create a new student account for your child and get 5% on every purchase on school suplies",
-			    		  "6. Get a new travel rewards card and earn 5000 miles in Emirates airlines",
-			    		  "7. Apply for new credit card before festival and get 10% discount on any purchase during festival.",
-			    		  "8. Deposit 1000$ in your child student account and get 30% cashback on every purchase on school supplies",
-			    		  "9. Fly around world with your travel credit card and get extra miles on every fly",
-			    		  "10. Earn 9% cashback ");
-			      JOptionPane.showMessageDialog(null,promotions);
-			      
-			      customerMultiThreading.runThread();
-			      JOptionPane.showMessageDialog(null, customerMultiThreading.message);
-			      promotionWindow promo = new promotionWindow();
-			      promo.startPromotionWindow();
-			      
-			      
-			   } // end if
-			   else
-			   {
-				   JOptionPane.showMessageDialog(null,"Invalid Account number or Pin. Please try again!");
-			   }	
-		}catch(Exception error){
-			JOptionPane.showMessageDialog(null,"Please provide valid account details");
-		}
+		
 		
 	}
 	
@@ -624,17 +640,20 @@ class exceedTransaction implements ActionListener
 
 class WithdrawalMoney implements ActionListener
 {	
-	protected static JFrame frame4 = new JFrame("Withdrawal Money");
-	protected static int withdrawalValue;
-	protected static JButton twenty;
-	protected static JButton fourty;
-	protected static JButton sixty;
-	protected static JButton hundred;
-	protected static JButton hundredTwenty;
-	protected static JButton cancel;
 	
 	public void actionPerformed(ActionEvent e)
 	{
+
+		 JFrame frame4 = new JFrame("Withdrawal Money");
+		 int withdrawalValue;
+		 JButton twenty;
+		 JButton fourty;
+		 JButton sixty;
+		 JButton hundred;
+		 JButton hundredTwenty;
+		 JButton cancel;
+
+		
 		JPanel panel = new JPanel();
 		frame4.add(panel);
 		
@@ -688,11 +707,13 @@ class WithdrawalMoney implements ActionListener
 }
 class statementButton implements ActionListener
 {
-	protected static JFrame statementFrame = new JFrame("Statement Frame");
-	protected static JButton completeStatement;
-	protected static JButton dateStatement;
 	public void actionPerformed(ActionEvent e)
 	{
+
+		 JFrame statementFrame = new JFrame("Statement Frame");
+		 JButton completeStatement;
+		 JButton dateStatement;
+
 		JPanel panel = new JPanel();
 		completeStatement = new JButton("Complete Statement");
 		dateStatement = new JButton("Select Dates");
@@ -725,12 +746,15 @@ class completeStatement implements ActionListener
 
 class statementBetweenDates implements ActionListener
 {
-	protected static JFrame modifiedStatement = new JFrame("Statement between dates");
-	protected static JTextField startDate;
-	protected static JTextField endDate;
-	protected static boolean initCompleted = false;
 	public void init()
 	{
+
+		 JFrame modifiedStatement = new JFrame("Statement between dates");
+		 JTextField startDate;
+		 JTextField endDate;
+		 boolean initCompleted = false;
+
+		
 		JPanel panel = new JPanel();
 		JLabel label1 = new JLabel("Start Date");
 		startDate = new JTextField();
@@ -792,11 +816,15 @@ class statementBetweenDates implements ActionListener
 
 class statementGeneration implements ActionListener
 {
-	protected static String statementMessage = "";
-	protected static String startingDate;
-	protected static String endingDate;
+
 	public void actionPerformed(ActionEvent e)
 	{
+
+		 String statementMessage = "";
+		 String startingDate;
+		 String endingDate;
+
+		
 		String accountInformation = String.format("%nAccount number: ", ATM.currentAccountNumber);
 		boolean performOperation = false;
 		   startingDate = statementBetweenDates.startDate.getText();

@@ -37,25 +37,5 @@ public class customerMultiThreading implements Runnable{
 		}
 	}
 	
-	
-	public static void runThread()
-	{
-		BankDatabase bankDB = new BankDatabase();
-		
-		ExecutorService e = Executors.newFixedThreadPool(10);
-		for(int i = 0; i< bankDB.accounts.length;i++)
-		{
-			String customerName = bankDB.accounts[i].getName();
-			e.execute(new customerMultiThreading(customerName));
-	
-		}
-		
-		e.shutdown();
-		try {
-			e.awaitTermination(10, TimeUnit.MINUTES);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-	}
 }
+
