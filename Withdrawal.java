@@ -6,6 +6,7 @@ import javax.swing.JOptionPane;
 
 public class Withdrawal extends Transaction
 {
+	ATM atm = new ATM();
 private int amount; // amount to withdraw
 private CashDispenser cashDispenser; // reference to cash dispenser
 
@@ -34,7 +35,7 @@ public void execute()
    do
    {
       // obtain a chosen withdrawal amount from the user 
-      amount = WithdrawalMoney.withdrawalValue;
+      amount = atm.withdrawalValue;
       
       // check whether user chose a withdrawal amount or canceled
       if ( amount != 0 )
@@ -72,8 +73,8 @@ public void execute()
             {
             	String message = String.format("%s%n%n%s", "Insufficient cash available in the ATM.","Please choose a smaller amount.");
                 JOptionPane.showMessageDialog(null,message);
-                WithdrawalMoney.frame4.setVisible(false);
-                OptionWindow.frame2.setVisible(true);
+                atm.frame4.setVisible(false);
+                atm.frame2.setVisible(true);
             }
             	
          } // end if

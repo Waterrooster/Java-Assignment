@@ -21,7 +21,7 @@ import java.util.Date;
 
 public class Deposit extends Transaction implements ActionListener
 {
-
+ATM atm = new ATM();
 protected  JFrame frame3 = new JFrame("Deposit window");
 protected static JTextField depositInput;
 protected  JButton deposit;
@@ -45,7 +45,7 @@ public Deposit( int userAccountNumber, BankDatabase atmBankDatabase, DepositSlot
 
 public void actionPerformed(ActionEvent e)
 {
-		OptionWindow.frame2.setVisible(false);
+		atm.frame2.setVisible(false);
 		JPanel panel = new JPanel();
 		frame3.add(panel);
 		
@@ -108,7 +108,7 @@ class depositMoney implements ActionListener
 			JOptionPane.showMessageDialog(null, "Sorry! I can't accept more than $2000");
 			frame3.setVisible(false);
 			depositInput.setText("");
-			OptionWindow.frame2.setVisible(true);
+			atm.frame2.setVisible(true);
 		}
 		else
 		{
@@ -132,13 +132,13 @@ class depositMoney implements ActionListener
 			 		DateFormat time = new SimpleDateFormat("HH:mm:ss");
 			 		Calendar cal = Calendar.getInstance();
 
-			 		Transaction foo = new BalanceInquiry(ATM.currentAccountNumber,ATM.bankDatabase);
-					ATM.message += String.format("%n%s%n%s%nTransaction type: Deposit%nTransaction amount: $%.2f%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),amount,foo.getAvailableBalance(ATM.currentAccountNumber),foo.getTotalBalance(ATM.currentAccountNumber)-amount,foo.getAvailableBalance(ATM.currentAccountNumber),foo.getTotalBalance(ATM.currentAccountNumber));
-							String localStatement = String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%.2f%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),amount,foo.getAvailableBalance(ATM.currentAccountNumber),foo.getTotalBalance(ATM.currentAccountNumber)-amount,foo.getAvailableBalance(ATM.currentAccountNumber),foo.getTotalBalance(ATM.currentAccountNumber));
-							ATM.data.add(localStatement);
+			 		Transaction foo = new BalanceInquiry(atm.currentAccountNumber,atm.bankDatabase);
+					atm.message += String.format("%n%s%n%s%nTransaction type: Deposit%nTransaction amount: $%.2f%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),amount,foo.getAvailableBalance(atm.currentAccountNumber),foo.getTotalBalance(atm.currentAccountNumber)-amount,foo.getAvailableBalance(atm.currentAccountNumber),foo.getTotalBalance(atm.currentAccountNumber));
+							String localStatement = String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%.2f%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),amount,foo.getAvailableBalance(atm.currentAccountNumber),foo.getTotalBalance(atm.currentAccountNumber)-amount,foo.getAvailableBalance(atm.currentAccountNumber),foo.getTotalBalance(atm.currentAccountNumber));
+							atm.data.add(localStatement);
 							frame3.setVisible(false);
 							depositInput.setText("");
-							OptionWindow.frame2.setVisible(true);
+							atm.frame2.setVisible(true);
 			      } // end if
 			      else // deposit envelope not received
 			      {
@@ -153,7 +153,7 @@ class depositMoney implements ActionListener
 			      JOptionPane.showMessageDialog(null,message );
 			      frame3.setVisible(false);
 				  depositInput.setText("");
-				  OptionWindow.frame2.setVisible(true);
+				  atm.frame2.setVisible(true);
 			   } 
 		}
 	}		
