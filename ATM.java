@@ -308,7 +308,7 @@ JFrame frame;
 					   submitPromotions();
 				   }
 					   });
-			   promotionWindow.setDefaultCloseOperation(promotionWindow.EXIT_ON_CLOSE);
+			   promotionWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		}
 		public void promotion1(){
 			if(promotions.size()<5)
@@ -765,7 +765,7 @@ JFrame frame;
 			statementFrame.setVisible(true);
 			statementFrame.setSize(400, 200);
 			
-			statementFrame.setDefaultCloseOperation(statementFrame.EXIT_ON_CLOSE);
+			statementFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 			statementFrame.setLocation(dim.width/2-statementFrame.getSize().width/2, dim.height/2-statementFrame.getSize().height/2);
 			
@@ -790,9 +790,6 @@ JFrame frame;
 		{
 
 			 modifiedStatement = new JFrame("Statement between dates");
-			 boolean initCompleted = false;
-
-			
 			JPanel panel = new JPanel();
 			JLabel label1 = new JLabel("Start Date");
 			startDate = new JTextField();
