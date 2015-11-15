@@ -8,6 +8,8 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.GroupLayout.Alignment;
+
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.awt.Dimension;
@@ -20,7 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.Timer;
 import java.util.Random;
 import java.util.TimerTask;
-//ATM.java
+//java
 //Represents an automated teller machine
 
 public class ATM implements Runnable
@@ -32,6 +34,7 @@ public class ATM implements Runnable
 	 String message = "";
 	JFrame promotionWindow;
 	JFrame frame2;
+	JFrame frame3;
 	JFrame frame4;
 	JFrame statementFrame;
 	int withdrawalValue;
@@ -39,18 +42,17 @@ public class ATM implements Runnable
 	boolean initCompleted = false;
 	JTextField startDate;
 	JTextField endDate;
-
-
+	int amount;
+	double depositAmount;
+	JTextField depositInput;
+	int CANCELED = 0;
 	 boolean userAuthenticated= false; // whether user is authenticated
 	 int currentAccountNumber;	 
 	 CashDispenser cashDispenser = new CashDispenser(); // ATM's cash dispenser
 	 DepositSlot depositSlot = new DepositSlot(); // ATM's deposit slot
 	 BankDatabase bankDatabase = new BankDatabase();
-
-	 public ATM()
-	 {
-		 
-	 }
+	 boolean showPromotions = true;
+	 String threadMessage = "";
 public ATM(Account acc)
 {
 	this.account = acc;
@@ -188,11 +190,17 @@ JFrame frame;
 			    		  "8. Deposit 1000$ in your child student account and get 30% cashback on every purchase on school supplies",
 			    		  "9. Fly around world with your travel credit card and get extra miles on every fly",
 			    		  "10. Earn 9% cashback ");
-			      JOptionPane.showMessageDialog(null,promotions);
 			      
-//			      customerMultiThreading.runThread();
-//			      JOptionPane.showMessageDialog(null, customerMultiThreading.message);
-			      startPromotionWindow();			      
+			      if(showPromotions)
+			      {
+				      JOptionPane.showMessageDialog(null,promotions);
+			    	  startPromotionWindow();
+			    	  showPromotions = false;
+			      }
+			      else
+			      {
+			    	  startOptionWindow();
+			      }
 			   } // end if
 			   else
 			   {
@@ -543,7 +551,11 @@ JFrame frame;
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		frame2.setLocation(dim.width/2-frame2.getSize().width/2, dim.height/2-frame2.getSize().height/2);
 		
-			deposit.addActionListener(new Deposit(currentAccountNumber,bankDatabase,depositSlot));
+			deposit.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e){
+					deposit();
+				}
+			});
 			withdrawal.addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent e)
 				{
@@ -572,6 +584,144 @@ JFrame frame;
 			}
 		});
 		
+		}
+		public void deposit()
+		{
+			frame3 = new JFrame("Deposit Window");
+			frame2.setVisible(false);
+			JButton depositMoney = new JButton("Deposit");
+			depositInput = new JTextField();
+			depositInput.setText("");
+			JPanel panel = new JPanel();
+			frame3.add(panel);
+			JLabel label = new JLabel("Welcome");
+			JLabel label1 = new JLabel("Enter deposit amount in CENTS");
+			panel.add(depositMoney);
+			depositInput.setToolTipText("Deposit amount");
+			GroupLayout layout = new GroupLayout(panel);
+			   panel.setLayout(layout);
+			  layout.setAutoCreateGaps(true);
+			  layout.setAutoCreateContainerGaps(true);
+			  
+			  GroupLayout.ParallelGroup hGroup = layout.createParallelGroup();
+			   hGroup.addGroup(layout.createParallelGroup().addComponent(label));
+			   hGroup.addGroup(layout.createParallelGroup().
+			            addComponent(label1));
+			   hGroup.addGroup(layout.createParallelGroup().
+			            addComponent(depositInput));
+			   hGroup.addGroup(layout.createParallelGroup().addComponent(depositMoney));
+			   layout.setHorizontalGroup(hGroup);
+			   
+			   GroupLayout.SequentialGroup vGroup = layout.createSequentialGroup();
+			  
+			   vGroup.addGroup(layout.createParallelGroup(Alignment.CENTER).addComponent(label));
+			   vGroup.addGroup(layout.createParallelGroup(Alignment.BASELINE).
+			            addComponent(label1));
+			   vGroup.addGroup(layout.createParallelGroup(Alignment.BASELINE).
+					   addComponent(depositInput));
+			   vGroup.addGroup(layout.createParallelGroup(Alignment.CENTER).addComponent(depositMoney));
+			   layout.setVerticalGroup(vGroup);
+			   
+			   depositMoney.addActionListener(new ActionListener(){
+					   public void actionPerformed(ActionEvent e){
+						   depositMoney();
+					   }
+			   });
+
+			   frame3.setVisible(true);
+			   frame3.setSize(400,200);
+			   frame3.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			   
+			   
+			   Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+			   frame3.setLocation(dim.width/2-frame3.getSize().width/2, dim.height/2-frame3.getSize().height/2);
+		}
+		public void depositMoney()
+		{
+			depositAmount = promptForDepositAmount();
+			String depositMessage = String.format("Your deposited amount is: $%.2f", depositAmount);
+			JOptionPane.showMessageDialog(null, depositMessage);
+			// check whether user entered a deposit amount or canceled
+			if(depositAmount > 2000)
+			{
+				JOptionPane.showMessageDialog(null, "Sorry! I can't accept more than $2000");
+				frame3.setVisible(false);
+				depositInput.setText("");
+				frame2.setVisible(true);
+			}
+			else
+			{
+				if( depositAmount != CANCELED )
+				   {
+				      // request deposit envelope containing specified amount
+				      // receive deposit envelope
+				      boolean envelopeReceived = depositSlot.isEnvelopeReceived();
+
+				      // check whether deposit envelope was received
+				      if ( envelopeReceived )
+				      {  
+				    	  String depositNotification = String.format("%s%n%s%n%s","Your envelope has been received.","NOTE: The money just deposited will not be available until we ","verify the amount of any enclosed cash and your checks clear.");
+				        JOptionPane.showMessageDialog(null, depositNotification);
+						   
+				         // credit account to reflect the deposit
+				         bankDatabase.credit( currentAccountNumber, depositAmount ); 
+				         
+				 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+				 		Date date = new Date();
+				 		DateFormat time = new SimpleDateFormat("HH:mm:ss");
+				 		Calendar cal = Calendar.getInstance();
+
+				 		Transaction foo = new BalanceInquiry(currentAccountNumber,bankDatabase);
+						message += String.format("%n%s%n%s%nTransaction type: Deposit%nTransaction amount: $%.2f%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),depositAmount,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber)-depositAmount,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
+								String localStatement = String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%.2f%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),depositAmount,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber)-depositAmount,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
+								data.add(localStatement);
+								frame3.setVisible(false);
+								depositInput.setText("");
+								frame2.setVisible(true);
+				      } // end if
+				      else // deposit envelope not received
+				      {
+				    	  String message = String.format("%s%n","You did not insert an envelope, so the ATM has canceled your transaction." );
+				         JOptionPane.showMessageDialog(null, message );
+				      } // end else
+				      
+				   } // end if 
+				   else // user canceled instead of entering amount
+				   {
+					   String message = String.format("%s", "Canceling transaction...");
+				      JOptionPane.showMessageDialog(null,message );
+				      frame3.setVisible(false);
+					  depositInput.setText("");
+					  frame2.setVisible(true);
+				   }
+			}
+
+		}
+		public double promptForDepositAmount()
+		{
+			int input=0;
+			   try
+			   {
+				   input = Integer.parseInt(depositInput.getText());
+			   }catch(Exception e){
+				   JOptionPane.showMessageDialog(null, "Enter valid amount");
+			   }
+			   if(input<0)
+			   {
+				   JOptionPane.showMessageDialog(null, "Enter valid amount");
+				   return CANCELED;
+			   }
+			   else
+			   {
+				   if (input == 0 )
+				   {
+					   return CANCELED; 
+				   }
+				    else
+				   {
+				      return (double)input/100; // return dollar amount
+				   } // end else
+			   }
 		}
 		public void withdrawal(){
 			frame4 = new JFrame("Withdrawal Money");
@@ -657,15 +807,13 @@ JFrame frame;
 		}
 		public void cancel(){
 			withdrawalValue = 0;
-			Withdrawal withdrawCash = new Withdrawal(currentAccountNumber,bankDatabase, cashDispenser,withdrawalValue);		
-			withdrawCash.execute();
+			execute(withdrawalValue);
 			frame4.setVisible(false);
 			frame2.setVisible(true);
 		}
 		public void twenty(){
 			withdrawalValue = 20;
-			Withdrawal withdrawCash = new Withdrawal(currentAccountNumber,bankDatabase, cashDispenser,withdrawalValue);
-			withdrawCash.execute();
+			execute(withdrawalValue);
 			frame4.setVisible(false);
 			frame2.setVisible(true);
 			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -680,8 +828,7 @@ JFrame frame;
 		public void fourty(){
 
 			withdrawalValue = 40;
-			Withdrawal withdrawCash = new Withdrawal(currentAccountNumber,bankDatabase, cashDispenser,withdrawalValue);
-			withdrawCash.execute();
+			execute(withdrawalValue);
 			frame4.setVisible(false);
 			frame2.setVisible(true);
 			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -696,8 +843,7 @@ JFrame frame;
 		public void sixty(){
 
 			withdrawalValue = 60;
-			Withdrawal withdrawCash = new Withdrawal(currentAccountNumber,bankDatabase, cashDispenser,withdrawalValue);
-			withdrawCash.execute();
+			execute(withdrawalValue);
 			frame4.setVisible(false);
 			frame2.setVisible(true);
 			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -712,8 +858,7 @@ JFrame frame;
 		public void hundred(){
 
 			withdrawalValue = 100;
-			Withdrawal withdrawCash = new Withdrawal(currentAccountNumber,bankDatabase, cashDispenser,withdrawalValue);
-			withdrawCash.execute();
+			execute(withdrawalValue);
 			frame4.setVisible(false);
 			frame2.setVisible(true);
 			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -728,8 +873,7 @@ JFrame frame;
 		public void hundredTwenty(){
 
 			withdrawalValue = 120;
-			Withdrawal withdrawCash = new Withdrawal(currentAccountNumber,bankDatabase, cashDispenser,withdrawalValue);
-			withdrawCash.execute();
+			execute(withdrawalValue);
 			frame4.setVisible(false);
 			frame2.setVisible(true);
 			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -842,6 +986,75 @@ JFrame frame;
 				   }
 			   });
 		}
+		public void execute(int withdrawalValue)
+		{
+		   boolean cashDispensed = false; // cash was not dispensed yet
+		   double availableBalance; // amount available for withdrawal
+		   double totalBalance;
+		   // get references to bank database and screen
+
+		   // loop until cash is dispensed or the user cancels
+		   do
+		   {
+		      // obtain a chosen withdrawal amount from the user 
+		      amount = withdrawalValue;
+		      
+		      // check whether user chose a withdrawal amount or canceled
+		      if ( amount != 0 )
+		      {
+		         // get available balance of account involved
+		         availableBalance = 
+		            bankDatabase.getAvailableBalance( currentAccountNumber );
+		   
+		         // check whether the user has enough money in the account 
+		         if ( amount <= availableBalance )
+		         {   
+		            // check whether the cash dispenser has enough money
+		            if ( cashDispenser.isSufficientCashAvailable( amount ) )
+		            {
+		               // update the account involved to reflect withdrawal
+		               bankDatabase.debit( currentAccountNumber, amount );
+		               
+		               cashDispenser.dispenseCash( amount ); // dispense cash
+		               cashDispensed = true; // cash was dispensed
+		               // instruct user to take cash
+
+		               // get the available balance for the account involved
+		              availableBalance = 
+		                  bankDatabase.getAvailableBalance( currentAccountNumber );
+
+		               // get the total balance for the account involved
+		               totalBalance = 
+		                  bankDatabase.getTotalBalance( currentAccountNumber);
+		               
+		               String message = String.format("Please take your cash now. %nYour remaining balance is: $%.2f%nYour total balance is: $%.2f",availableBalance,totalBalance);
+		               JOptionPane.showMessageDialog(null, message);
+		            } // end if
+		            else	// cash dispenser does not have enough cash
+		            {
+		            	String message = String.format("%s%n%n%s", "Insufficient cash available in the ","Please choose a smaller amount.");
+		                JOptionPane.showMessageDialog(null,message);
+		                frame4.setVisible(false);
+		                frame2.setVisible(true);
+		            }
+		            	
+		         } // end if
+		         else // not enough money available in user's account
+		         {
+		        	 String message = String.format("%s%n%n%s", "Insufficient funds in your account.","Please choose a smaller amount.");
+		             JOptionPane.showMessageDialog(null,message);
+		             cashDispensed = true;
+		         } // end else
+		      } // end if
+		      else // user chose cancel menu option 
+		      {
+		    	JOptionPane.showMessageDialog(null, "Cancelling transaction...");
+		    	cashDispensed = true;
+		  		break;
+		      } // end else
+		   } while ( !cashDispensed );
+
+		}
 		public void statementGeneration(){
 			 String statementMessage = "";
 			 String startingDate;
@@ -851,13 +1064,7 @@ JFrame frame;
 			String accountInformation = String.format("%nAccount number: ", currentAccountNumber);
 			boolean performOperation = false;
 			   startingDate = startDate.getText();
-			
-			   System.out.println("starting date is : "+startingDate);
-			   
-			   endingDate = endDate.getText();
-			   
-			   System.out.println("ending date is: "+endingDate);
-			   
+			   endingDate = endDate.getText();			   
 			   if(CurrentDate.isThisDateValid(startingDate, "dd/MM/yyyy") && CurrentDate.isThisDateValid(endingDate, "dd/MM/yyyy"))
 			   {
 				   performOperation = true;
