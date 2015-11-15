@@ -32,7 +32,6 @@ public class customerMultiThreading implements Runnable{
 		}
 		message += String.format("Thread: %d went to sleep for 10 seconds.End time: %s  %s%n%n", Thread.currentThread().getId(),dateFormat.format(date),time.format(cal.getTime()));
 		}
-	}
-	
+	}	
 }
 

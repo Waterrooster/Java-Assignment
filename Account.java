@@ -12,6 +12,10 @@ protected double totalBalance; // funds available + pending deposits
 protected String firstName;
 protected String lastName;
 // Account constructor initializes attributes
+public Account(int theAccountNumber)
+{
+	accountNumber = theAccountNumber;
+}
 public Account( int theAccountNumber, int thePIN, 
    double theAvailableBalance, double theTotalBalance,String fName, String lName )
 {

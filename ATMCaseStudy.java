@@ -16,10 +16,9 @@ public class ATMCaseStudy
 		
 		ExecutorService e = Executors.newFixedThreadPool(10);
 //		for(int i = 0; i< bankDB.accounts.length;i++)
-		for(int i = 0; i< 1;i++)
+		for(int i = 0; i< 3;i++)
 		{
 			e.execute(new ATM(bankDB.accounts[i]));
-	
 		}
 		
 		e.shutdown();
