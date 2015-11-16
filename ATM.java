@@ -33,9 +33,9 @@ public class ATM implements Runnable
 	 ArrayList<String> data= new ArrayList<>();
 	 String message = "";
 	JFrame promotionWindow;
-	JFrame frame2;
-	JFrame frame3;
-	JFrame frame4;
+	JFrame OptionFrame;
+	JFrame DepositFrame;
+	JFrame WithdrawalFrame;
 	JFrame statementFrame;
 	int withdrawalValue;
 	JFrame modifiedStatement;
@@ -53,15 +53,19 @@ public class ATM implements Runnable
 	 BankDatabase bankDatabase = new BankDatabase();
 	 boolean showPromotions = true;
 	 String threadMessage = "";
-	 String customerName = "";
-	 Account customerAccount;
-	 
+	 String customerName;
+	 long threadId;
 public ATM(Account acc)
 {
 	this.account = acc;
 }
+
+public void setThreadId(long id) {
+	threadId = id;
+}
+
 public void run()
-{
+{				
 		startWindow();
 		if(userAuthenticated)
 		{
@@ -70,9 +74,6 @@ public void run()
 		userAuthenticated = false;
 		currentAccountNumber = 0;
 }
-// attempts to authenticate user against database
-
-// display the main menu and perform transactions
 private void performTransactions() 
 {
    
@@ -82,24 +83,24 @@ private void performTransactions()
    if( !userExited )
    {     
       // show main menu and get user selection
-	   frame.setVisible(false);
-	   frame2.setVisible(true);
+	   LoginFrame.setVisible(false);
+	   OptionFrame.setVisible(true);
 	   
    } // end while
 } // end method performTransactions
 
 JTextField usernameInput;
 JTextField passwordInput;
-JFrame frame;
+JFrame LoginFrame;
 	public void startWindow()
 	{
 
-		frame = new JFrame("Bank window");
+		LoginFrame = new JFrame("Login Window");
 		JPanel panel = new JPanel();
 		
 		JButton verify;
 
-		frame.add(panel);
+		LoginFrame.add(panel);
 		
 		JLabel label = new JLabel("Welcome");
 			JLabel label1 = new JLabel("Account number");
@@ -153,12 +154,11 @@ JFrame frame;
 			   vGroup.addGroup(layout.createParallelGroup(Alignment.CENTER).addComponent(verify));
 			   layout.setVerticalGroup(vGroup);
 			   			   
-			   frame.setVisible(true);
-			   frame.setSize(400,200);
-			   frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			   LoginFrame.setVisible(true);
+			   LoginFrame.setSize(400,200);
 			   
 			   Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-			   frame.setLocation(dim.width/2-frame.getSize().width/2, dim.height/2-frame.getSize().height/2);
+			   LoginFrame.setLocation(dim.width/2-LoginFrame.getSize().width/2, dim.height/2-LoginFrame.getSize().height/2);
 			   
 			   verify.addActionListener(new ActionListener() {
 				   public void actionPerformed(ActionEvent e) {
@@ -185,13 +185,11 @@ JFrame frame;
 					Date date = new Date();
 					DateFormat time = new SimpleDateFormat("HH:mm:ss");
 					Calendar cal = Calendar.getInstance();
+					currentAccountNumber = accountNumber;
+					customerName = account.getName(currentAccountNumber);
+					threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s  %s %n",threadId,customerName,"Customer Login", dateFormat.format(date),time.format(cal.getTime()));
 
-				   currentAccountNumber = accountNumber;
-				   customerAccount = new Account(currentAccountNumber);
-				   customerName = customerAccount.getFirstName() + " " + customerAccount.getLastName();
-			 	   threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s  %s %n",Thread.currentThread().getId(),customerName,"Customer Login", dateFormat.format(date),time.format(cal.getTime()));
-
-			      frame.setVisible(false);
+					LoginFrame.setVisible(false);
 			      String promotions = String.format("%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n","1. Get 10% cash back offer on every purchase at shopping malls",
 			    		  "2. Deposit 10,000$ within first 10 days of opening a new account and get 200$ back",
 			    		  "3. Get 20% cashback on every purchase at dining services",
@@ -224,7 +222,7 @@ JFrame frame;
 	}
 		public void startPromotionWindow()
 		{
-			 promotionWindow = new JFrame("Promotions");
+			 promotionWindow = new JFrame(customerName);
 			 JButton submit;
 			 JButton promo1;
 			 JButton promo2;
@@ -328,7 +326,6 @@ JFrame frame;
 					   submitPromotions();
 				   }
 					   });
-			   promotionWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		}
 		public void promotion1(){
 			if(promotions.size()<5)
@@ -509,16 +506,50 @@ JFrame frame;
 				startOptionWindow();	
 			    int timeout_ms = 10000;//10 * 1000
 			    Timer timer = new Timer();
-			    timer.schedule(displayPromotion(), timeout_ms);
+			    timer.schedule(new displayPromotion(), timeout_ms);
 			}
 			else
 			{
 				JOptionPane.showMessageDialog(null, "Kindly choose 5 promotions");
 			}
 		}
+		class displayPromotion extends TimerTask
+		{
+
+			@Override
+			public void run() {
+				ArrayList<String> promotionsDetail = new ArrayList<>();
+				promotionsDetail.add("Get 10% cash back offer on every purchase at shopping malls");
+				promotionsDetail.add("Deposit 10,000$ within first 10 days of opening a new account and get 200$ back");
+				promotionsDetail.add("Get 20% cashback on every purchase at dining services");
+				promotionsDetail.add("Spend 500$ at any disney store with disney card and get 20% cashback");
+				promotionsDetail.add("Create a new student account for your child and get 5% on every purchase on school suplies");
+				promotionsDetail.add("Get a new travel rewards card and earn 5000 miles in Emirates airlines");
+				promotionsDetail.add("Apply for new credit card before festival and get 10% discount on any purchase during festival");
+				promotionsDetail.add("Deposit 1000$ in your child student account and get 30% cashback on every purchase on school supplies");
+				promotionsDetail.add("Fly around world with your travel credit card and get extra miles on every fly");
+				promotionsDetail.add("Earn 9% cashback");
+				String message = "";
+				Random randomNumber = new Random();
+				boolean promotionPresent = true;
+				while(promotionPresent)
+				{
+					int randomNum = randomNumber.nextInt(5)+1;
+					if(promotions.indexOf(randomNum)!= -1)
+					{	
+						message += String.format("%n%s%n%n", "                  "
+								+ "Promotion available!!");
+						message += promotionsDetail.get(randomNum);
+							JOptionPane.showMessageDialog(null, message);
+						promotionPresent = false;
+					}
+				}
+			}
+			
+		}
 		public void startOptionWindow()
 		{
-			frame2 = new JFrame("Option Window");
+			OptionFrame = new JFrame(customerName);
 			 JButton balance;
 			 JButton deposit;
 			 JButton withdrawal;
@@ -533,9 +564,9 @@ JFrame frame;
 		withdrawal = new JButton("Withdrawal");
 		exit = new JButton("Exit");
 		statement = new JButton("Statement");
-		frame2.add(panel);
-		frame2.setSize(400,200);
-		frame2.setVisible(true);
+		OptionFrame.add(panel);
+		OptionFrame.setSize(400,200);
+		OptionFrame.setVisible(true);
 		
 		panel.add(balance);
 		panel.add(deposit);
@@ -561,7 +592,7 @@ JFrame frame;
 		   layout.setVerticalGroup(vGroup);
 		
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-		frame2.setLocation(dim.width/2-frame2.getSize().width/2, dim.height/2-frame2.getSize().height/2);
+		OptionFrame.setLocation(dim.width/2-OptionFrame.getSize().width/2, dim.height/2-OptionFrame.getSize().height/2);
 		
 			deposit.addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent e){
@@ -592,12 +623,12 @@ JFrame frame;
 				DateFormat time = new SimpleDateFormat("HH:mm:ss");
 				Calendar cal = Calendar.getInstance();
 
-		 		threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s  %s %n",Thread.currentThread().getId(),customerName,"Log out", dateFormat.format(date),time.format(cal.getTime()));
+		 		threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s  %s %n",threadId,customerName,"Log out", dateFormat.format(date),time.format(cal.getTime()));
 				String message = String.format("%s%n%s%n%n","Exiting the system...","Thank you! Goodbye!");
+				LoginFrame.setVisible(false);
 				JOptionPane.showMessageDialog(null,message);
 				JOptionPane.showMessageDialog(null,threadMessage);
-				frame2.setVisible(false);
-				frame.setVisible(true);
+				OptionFrame.setVisible(false);
 				passwordInput.setText("");
 				usernameInput.setText("");
 			}
@@ -606,13 +637,13 @@ JFrame frame;
 		}
 		public void deposit()
 		{
-			frame3 = new JFrame("Deposit Window");
-			frame2.setVisible(false);
+			DepositFrame = new JFrame(customerName);
+			OptionFrame.setVisible(false);
 			JButton depositMoney = new JButton("Deposit");
 			depositInput = new JTextField();
 			depositInput.setText("");
 			JPanel panel = new JPanel();
-			frame3.add(panel);
+			DepositFrame.add(panel);
 			JLabel label = new JLabel("Welcome");
 			JLabel label1 = new JLabel("Enter deposit amount in CENTS");
 			panel.add(depositMoney);
@@ -647,13 +678,12 @@ JFrame frame;
 					   }
 			   });
 
-			   frame3.setVisible(true);
-			   frame3.setSize(400,200);
-			   frame3.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			   DepositFrame.setVisible(true);
+			   DepositFrame.setSize(400,200);
 			   
 			   
 			   Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-			   frame3.setLocation(dim.width/2-frame3.getSize().width/2, dim.height/2-frame3.getSize().height/2);
+			   DepositFrame.setLocation(dim.width/2-DepositFrame.getSize().width/2, dim.height/2-DepositFrame.getSize().height/2);
 		}
 		public void depositMoney()
 		{
@@ -664,9 +694,9 @@ JFrame frame;
 			if(depositAmount > 2000)
 			{
 				JOptionPane.showMessageDialog(null, "Sorry! I can't accept more than $2000");
-				frame3.setVisible(false);
+				DepositFrame.setVisible(false);
 				depositInput.setText("");
-				frame2.setVisible(true);
+				OptionFrame.setVisible(true);
 			}
 			else
 			{
@@ -691,14 +721,14 @@ JFrame frame;
 				         bankDatabase.credit( currentAccountNumber, depositAmount ); 
 				         
 				 		Transaction foo = new BalanceInquiry(currentAccountNumber,bankDatabase);
-				 		threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s  %s %n",Thread.currentThread().getId(),customerName,"Deposit", dateFormat.format(date),time.format(cal.getTime()));
+				 		threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s  %s %n",threadId,customerName,"Deposit", dateFormat.format(date),time.format(cal.getTime()));
 
 						message += String.format("%n%s%n%s%nTransaction type: Deposit%nTransaction amount: $%.2f%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),depositAmount,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber)-depositAmount,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
 								String localStatement = String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%.2f%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),depositAmount,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber)-depositAmount,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
 								data.add(localStatement);
-								frame3.setVisible(false);
+								DepositFrame.setVisible(false);
 								depositInput.setText("");
-								frame2.setVisible(true);
+								OptionFrame.setVisible(true);
 				      } // end if
 				      else // deposit envelope not received
 				      {
@@ -711,9 +741,9 @@ JFrame frame;
 				   {
 					   String message = String.format("%s", "Canceling transaction...");
 				      JOptionPane.showMessageDialog(null,message );
-				      frame3.setVisible(false);
+				      DepositFrame.setVisible(false);
 					  depositInput.setText("");
-					  frame2.setVisible(true);
+					  OptionFrame.setVisible(true);
 				   }
 			}
 
@@ -745,7 +775,7 @@ JFrame frame;
 			   }
 		}
 		public void withdrawal(){
-			frame4 = new JFrame("Withdrawal Money");
+			WithdrawalFrame = new JFrame(customerName);
 			 JButton twenty;
 			 JButton fourty;
 			 JButton sixty;
@@ -755,7 +785,7 @@ JFrame frame;
 
 			
 			JPanel panel = new JPanel();
-			frame4.add(panel);
+			WithdrawalFrame.add(panel);
 			
 			twenty = new JButton("Twenty");
 			fourty = new JButton("Fourty");
@@ -788,12 +818,12 @@ JFrame frame;
 			   vGroup.addGroup(layout.createSequentialGroup().addComponent(hundred).addComponent(hundredTwenty).addComponent(cancel));
 			   layout.setVerticalGroup(vGroup);
 			
-			   frame2.setVisible(false);
-			   frame4.setVisible(true);
-			   frame4.setSize(400,200);
+			   OptionFrame.setVisible(false);
+			   WithdrawalFrame.setVisible(true);
+			   WithdrawalFrame.setSize(400,200);
 			   
 			   Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-			   frame4.setLocation(dim.width/2-frame4.getSize().width/2, dim.height/2-frame4.getSize().height/2);
+			   WithdrawalFrame.setLocation(dim.width/2-WithdrawalFrame.getSize().width/2, dim.height/2-WithdrawalFrame.getSize().height/2);
 			   
 			   twenty.addActionListener(new ActionListener(){
 				   public void actionPerformed(ActionEvent e){
@@ -829,8 +859,8 @@ JFrame frame;
 		public void cancel(){
 			withdrawalValue = 0;
 			execute(withdrawalValue);
-			frame4.setVisible(false);
-			frame2.setVisible(true);
+			WithdrawalFrame.setVisible(false);
+			OptionFrame.setVisible(true);
 		}
 		public void twenty(){
 			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -840,10 +870,10 @@ JFrame frame;
 
 			withdrawalValue = 20;
 			execute(withdrawalValue);
-			frame4.setVisible(false);
-			frame2.setVisible(true);
+			WithdrawalFrame.setVisible(false);
+			OptionFrame.setVisible(true);
 			Transaction foo = new BalanceInquiry(currentAccountNumber,bankDatabase);
-	 		threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s  %s %n",Thread.currentThread().getId(),customerName,"Withdrawal", dateFormat.format(date),time.format(cal.getTime()));
+	 		threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s  %s %n",threadId,customerName,"Withdrawal", dateFormat.format(date),time.format(cal.getTime()));
 			message += String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
 					String localStatement = String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
 					data.add(localStatement);
@@ -856,10 +886,10 @@ JFrame frame;
 
 			withdrawalValue = 40;
 			execute(withdrawalValue);
-			frame4.setVisible(false);
-			frame2.setVisible(true);
+			WithdrawalFrame.setVisible(false);
+			OptionFrame.setVisible(true);
 			Transaction foo = new BalanceInquiry(currentAccountNumber,bankDatabase);
-	 		threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s  %s %n",Thread.currentThread().getId(),customerName,"Withdrawal", dateFormat.format(date),time.format(cal.getTime()));
+	 		threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s  %s %n",threadId,customerName,"Withdrawal", dateFormat.format(date),time.format(cal.getTime()));
 			message += String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
 					String localStatement = String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
 					data.add(localStatement);
@@ -872,10 +902,10 @@ JFrame frame;
 
 			withdrawalValue = 60;
 			execute(withdrawalValue);
-			frame4.setVisible(false);
-			frame2.setVisible(true);
+			WithdrawalFrame.setVisible(false);
+			OptionFrame.setVisible(true);
 			Transaction foo = new BalanceInquiry(currentAccountNumber,bankDatabase);
-	 		threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s  %s %n",Thread.currentThread().getId(),customerName,"Withdrawal", dateFormat.format(date),time.format(cal.getTime()));
+	 		threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s  %s %n",threadId,customerName,"Withdrawal", dateFormat.format(date),time.format(cal.getTime()));
 	 		message += String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
 					String localStatement = String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
 					data.add(localStatement);
@@ -888,10 +918,10 @@ JFrame frame;
 
 			withdrawalValue = 100;
 			execute(withdrawalValue);
-			frame4.setVisible(false);
-			frame2.setVisible(true);
+			WithdrawalFrame.setVisible(false);
+			OptionFrame.setVisible(true);
 			Transaction foo = new BalanceInquiry(currentAccountNumber,bankDatabase);
-	 		threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s  %s %n",Thread.currentThread().getId(),customerName,"Withdrawal", dateFormat.format(date),time.format(cal.getTime()));
+	 		threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s  %s %n",threadId,customerName,"Withdrawal", dateFormat.format(date),time.format(cal.getTime()));
 	 		message += String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
 					String localStatement = String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
 					data.add(localStatement);
@@ -904,10 +934,10 @@ JFrame frame;
 
 			withdrawalValue = 120;
 			execute(withdrawalValue);
-			frame4.setVisible(false);
-			frame2.setVisible(true);
+			WithdrawalFrame.setVisible(false);
+			OptionFrame.setVisible(true);
 			Transaction foo = new BalanceInquiry(currentAccountNumber,bankDatabase);
-	 		threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s  %s %n",Thread.currentThread().getId(),customerName,"Withdrawal", dateFormat.format(date),time.format(cal.getTime()));
+	 		threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s  %s %n",threadId,customerName,"Withdrawal", dateFormat.format(date),time.format(cal.getTime()));
 	 		message += String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
 					String localStatement = String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
 					data.add(localStatement);
@@ -921,7 +951,7 @@ JFrame frame;
 			transaction.execute();
 		}
 		public void statement(){
-			statementFrame = new JFrame("Statement Frame");
+			statementFrame = new JFrame(customerName);
 			 JButton completeStatement;
 			 JButton dateStatement;
 
@@ -931,12 +961,11 @@ JFrame frame;
 			statementFrame.add(panel);
 			panel.add(completeStatement);
 			panel.add(dateStatement);
-			frame2.setVisible(false);
+			OptionFrame.setVisible(false);
 			
 			statementFrame.setVisible(true);
 			statementFrame.setSize(400, 200);
 			
-			statementFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 			statementFrame.setLocation(dim.width/2-statementFrame.getSize().width/2, dim.height/2-statementFrame.getSize().height/2);
 			
@@ -955,12 +984,12 @@ JFrame frame;
 		public void completeStatement(){
 			JOptionPane.showMessageDialog(null,message);
 			statementFrame.setVisible(false);
-			frame2.setVisible(true);
+			OptionFrame.setVisible(true);
 		}
 		public void init()
 		{
 
-			 modifiedStatement = new JFrame("Statement between dates");
+			 modifiedStatement = new JFrame(customerName);
 			JPanel panel = new JPanel();
 			JLabel label1 = new JLabel("Start Date");
 			startDate = new JTextField();
@@ -1002,7 +1031,6 @@ JFrame frame;
 			   statementFrame.setVisible(false);
 			   modifiedStatement.setVisible(true);
 			   modifiedStatement.setSize(400,200);
-			   modifiedStatement.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			   
 			   
 			   Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -1061,8 +1089,8 @@ JFrame frame;
 		            {
 		            	String message = String.format("%s%n%n%s", "Insufficient cash available in the ","Please choose a smaller amount.");
 		                JOptionPane.showMessageDialog(null,message);
-		                frame4.setVisible(false);
-		                frame2.setVisible(true);
+		                WithdrawalFrame.setVisible(false);
+		                OptionFrame.setVisible(true);
 		            }
 		            	
 		         } // end if
@@ -1129,7 +1157,7 @@ JFrame frame;
 			   }
 
 			   modifiedStatement.setVisible(false);
-			   frame2.setVisible(true);
+			   OptionFrame.setVisible(true);
 			   startDate.setText("");
 			   endDate.setText("");
 			   statementMessage = "";
@@ -1142,35 +1170,4 @@ JFrame frame;
 			}
 			modifiedStatement.setVisible(true);
 		}
-		
-		public TimerTask displayPromotion()
-		{
-			ArrayList<String> promotionsDetail = new ArrayList<>();
-			promotionsDetail.add("Get 10% cash back offer on every purchase at shopping malls");
-			promotionsDetail.add("Deposit 10,000$ within first 10 days of opening a new account and get 200$ back");
-			promotionsDetail.add("Get 20% cashback on every purchase at dining services");
-			promotionsDetail.add("Spend 500$ at any disney store with disney card and get 20% cashback");
-			promotionsDetail.add("Create a new student account for your child and get 5% on every purchase on school suplies");
-			promotionsDetail.add("Get a new travel rewards card and earn 5000 miles in Emirates airlines");
-			promotionsDetail.add("Apply for new credit card before festival and get 10% discount on any purchase during festival");
-			promotionsDetail.add("Deposit 1000$ in your child student account and get 30% cashback on every purchase on school supplies");
-			promotionsDetail.add("Fly around world with your travel credit card and get extra miles on every fly");
-			promotionsDetail.add("Earn 9% cashback");
-			String message = "";
-			Random randomNumber = new Random();
-			boolean promotionPresent = true;
-			while(promotionPresent)
-			{
-				int randomNum = randomNumber.nextInt(5)+1;
-				if(promotions.indexOf(randomNum)!= -1)
-				{	
-					message += String.format("%n%s%n%n", "                  "
-							+ "Promotion available!!");
-					message += promotionsDetail.get(randomNum);
-					JOptionPane.showMessageDialog(null, message);
-					promotionPresent = false;
-				}
-			}
-			return null;
-		}	
 	}

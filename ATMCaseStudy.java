@@ -1,5 +1,7 @@
 package atm;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -14,19 +16,23 @@ public class ATMCaseStudy
 	{
 		BankDatabase bankDB = new BankDatabase();
 		
-		ExecutorService e = Executors.newFixedThreadPool(10);
+		
 //		for(int i = 0; i< bankDB.accounts.length;i++)
+//		List<Thread> threads = new ArrayList<>();
 		for(int i = 0; i< 3;i++)
 		{
-			e.execute(new ATM(bankDB.accounts[i]));
-		}
-		
-		e.shutdown();
-		try {
-			e.awaitTermination(10, TimeUnit.MINUTES);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			ATM atm = new ATM(bankDB.accounts[i]);
+			Thread thread = new Thread(atm);
+			atm.setThreadId(thread.getId());
+//			threads.add(thread);
+			thread.run();
+			try{
+				Thread.sleep(10000);
+			}catch(InterruptedException e)
+			{
+				
+			}
+			System.out.println(thread.getId());
 		}
 	}
 	public static void main(String[] args)
