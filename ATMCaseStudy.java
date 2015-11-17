@@ -17,14 +17,14 @@ public class ATMCaseStudy
 		BankDatabase bankDB = new BankDatabase();
 		
 		
-//		for(int i = 0; i< bankDB.accounts.length;i++)
-//		List<Thread> threads = new ArrayList<>();
-		for(int i = 0; i< 3;i++)
+		List<Thread> threads = new ArrayList<>();
+//		for(int i = 0; i<1;i++)
+		for(int i = 0; i< bankDB.accounts.length;i++)
 		{
 			ATM atm = new ATM(bankDB.accounts[i]);
 			Thread thread = new Thread(atm);
 			atm.setThreadId(thread.getId());
-//			threads.add(thread);
+			threads.add(thread);
 			thread.run();
 			try{
 				Thread.sleep(10000);
@@ -32,7 +32,6 @@ public class ATMCaseStudy
 			{
 				
 			}
-			System.out.println(thread.getId());
 		}
 	}
 	public static void main(String[] args)

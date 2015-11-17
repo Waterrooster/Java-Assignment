@@ -503,50 +503,49 @@ JFrame LoginFrame;
 			{
 				promotionWindow.setVisible(false);
 				JOptionPane.showMessageDialog(null, "Thank you for choosing the promotions. We will inform you once the promotions are online.");
-				startOptionWindow();	
+				startOptionWindow();
 			    int timeout_ms = 10000;//10 * 1000
 			    Timer timer = new Timer();
-			    timer.schedule(new displayPromotion(), timeout_ms);
+
+			    final String myCustomerName = customerName;
+			    timer.schedule(new TimerTask() {
+					@Override
+					public void run() {
+						ArrayList<String> promotionsDetail = new ArrayList<>();
+						promotionsDetail.add("Get 10% cash back offer on every purchase at shopping malls");
+						promotionsDetail.add("Deposit 10,000$ within first 10 days of opening a new account and get 200$ back");
+						promotionsDetail.add("Get 20% cashback on every purchase at dining services");
+						promotionsDetail.add("Spend 500$ at any disney store with disney card and get 20% cashback");
+						promotionsDetail.add("Create a new student account for your child and get 5% on every purchase on school suplies");
+						promotionsDetail.add("Get a new travel rewards card and earn 5000 miles in Emirates airlines");
+						promotionsDetail.add("Apply for new credit card before festival and get 10% discount on any purchase during festival");
+						promotionsDetail.add("Deposit 1000$ in your child student account and get 30% cashback on every purchase on school supplies");
+						promotionsDetail.add("Fly around world with your travel credit card and get extra miles on every fly");
+						promotionsDetail.add("Earn 9% cashback");
+						String message = "";
+						Random randomNumber = new Random();
+						boolean promotionPresent = true;
+						while(promotionPresent)
+						{
+							int randomNum = randomNumber.nextInt(5)+1;
+							if(promotions.indexOf(randomNum)!= -1)
+							{	
+								message += String.format("Customer Name: %s%nPromotion is available!%n",myCustomerName);
+								message += promotionsDetail.get(randomNum);
+									JOptionPane.showMessageDialog(null, message);
+								promotionPresent = false;
+							}
+						}
+					}
+
+			    }, timeout_ms);
 			}
 			else
 			{
 				JOptionPane.showMessageDialog(null, "Kindly choose 5 promotions");
 			}
 		}
-		class displayPromotion extends TimerTask
-		{
 
-			@Override
-			public void run() {
-				ArrayList<String> promotionsDetail = new ArrayList<>();
-				promotionsDetail.add("Get 10% cash back offer on every purchase at shopping malls");
-				promotionsDetail.add("Deposit 10,000$ within first 10 days of opening a new account and get 200$ back");
-				promotionsDetail.add("Get 20% cashback on every purchase at dining services");
-				promotionsDetail.add("Spend 500$ at any disney store with disney card and get 20% cashback");
-				promotionsDetail.add("Create a new student account for your child and get 5% on every purchase on school suplies");
-				promotionsDetail.add("Get a new travel rewards card and earn 5000 miles in Emirates airlines");
-				promotionsDetail.add("Apply for new credit card before festival and get 10% discount on any purchase during festival");
-				promotionsDetail.add("Deposit 1000$ in your child student account and get 30% cashback on every purchase on school supplies");
-				promotionsDetail.add("Fly around world with your travel credit card and get extra miles on every fly");
-				promotionsDetail.add("Earn 9% cashback");
-				String message = "";
-				Random randomNumber = new Random();
-				boolean promotionPresent = true;
-				while(promotionPresent)
-				{
-					int randomNum = randomNumber.nextInt(5)+1;
-					if(promotions.indexOf(randomNum)!= -1)
-					{	
-						message += String.format("%n%s%n%n", "                  "
-								+ "Promotion available!!");
-						message += promotionsDetail.get(randomNum);
-							JOptionPane.showMessageDialog(null, message);
-						promotionPresent = false;
-					}
-				}
-			}
-			
-		}
 		public void startOptionWindow()
 		{
 			OptionFrame = new JFrame(customerName);
@@ -947,6 +946,12 @@ JFrame LoginFrame;
 			JOptionPane.showMessageDialog(null, "You exceeded daily limit of 20 transactions");
 		}
 		public void balance(){
+			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+			Date date = new Date();
+			DateFormat time = new SimpleDateFormat("HH:mm:ss");
+			Calendar cal = Calendar.getInstance();
+
+			threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s  %s %n",threadId,customerName,"Checking Balance", dateFormat.format(date),time.format(cal.getTime()));
 			Transaction transaction = new BalanceInquiry(currentAccountNumber,bankDatabase);
 			transaction.execute();
 		}
@@ -982,6 +987,12 @@ JFrame LoginFrame;
 			});
 		}
 		public void completeStatement(){
+			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+			Date date = new Date();
+			DateFormat time = new SimpleDateFormat("HH:mm:ss");
+			Calendar cal = Calendar.getInstance();
+			threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s  %s %n",threadId,customerName,"Viewed complete statement", dateFormat.format(date),time.format(cal.getTime()));
+
 			JOptionPane.showMessageDialog(null,message);
 			statementFrame.setVisible(false);
 			OptionFrame.setVisible(true);
@@ -1032,10 +1043,16 @@ JFrame LoginFrame;
 			   modifiedStatement.setVisible(true);
 			   modifiedStatement.setSize(400,200);
 			   
-			   
-			   Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-			   modifiedStatement.setLocation(dim.width/2-modifiedStatement.getSize().width/2, dim.height/2-modifiedStatement.getSize().height/2);
-			   generateStatement.addActionListener(new ActionListener(){
+				DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+				Date date = new Date();
+				DateFormat time = new SimpleDateFormat("HH:mm:ss");
+				Calendar cal = Calendar.getInstance();
+				threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s  %s %n",threadId,customerName,"Viewed Statement.", dateFormat.format(date),time.format(cal.getTime()));
+
+
+				Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+				modifiedStatement.setLocation(dim.width/2-modifiedStatement.getSize().width/2, dim.height/2-modifiedStatement.getSize().height/2);
+				generateStatement.addActionListener(new ActionListener(){
 				   public void actionPerformed(ActionEvent e){
 					   statementGeneration();
 				   }
@@ -1155,7 +1172,6 @@ JFrame LoginFrame;
 				   accountInformation+= statementMessage;
 			   	   JOptionPane.showMessageDialog(null, accountInformation);
 			   }
-
 			   modifiedStatement.setVisible(false);
 			   OptionFrame.setVisible(true);
 			   startDate.setText("");
