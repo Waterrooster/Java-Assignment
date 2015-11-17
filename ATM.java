@@ -55,6 +55,9 @@ public class ATM implements Runnable
 	 String threadMessage = "";
 	 String customerName;
 	 long threadId;
+	 Date serviceStartTime;
+	 Date serviceEndTime;
+	 
 public ATM(Account acc)
 {
 	this.account = acc;
@@ -188,7 +191,7 @@ JFrame LoginFrame;
 					currentAccountNumber = accountNumber;
 					customerName = account.getName(currentAccountNumber);
 					threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s  %s %n",threadId,customerName,"Customer Login", dateFormat.format(date),time.format(cal.getTime()));
-
+					serviceStartTime = time.parse(dateFormat.format(cal.getTime()));
 					LoginFrame.setVisible(false);
 			      String promotions = String.format("%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n","1. Get 10% cash back offer on every purchase at shopping malls",
 			    		  "2. Deposit 10,000$ within first 10 days of opening a new account and get 200$ back",
@@ -205,7 +208,6 @@ JFrame LoginFrame;
 			      {
 				      JOptionPane.showMessageDialog(null,promotions);
 			    	  startPromotionWindow();
-			    	  showPromotions = false;
 			      }
 			      else
 			      {
@@ -621,8 +623,13 @@ JFrame LoginFrame;
 				Date date = new Date();
 				DateFormat time = new SimpleDateFormat("HH:mm:ss");
 				Calendar cal = Calendar.getInstance();
-
-		 		threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s  %s %n",threadId,customerName,"Log out", dateFormat.format(date),time.format(cal.getTime()));
+				try {
+					serviceEndTime = time.parse(dateFormat.format(cal.getTime()));
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+		 		threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s  %s %n%n service time: %d",threadId,customerName,"Log out", serviceEndTime.getTime()-serviceStartTime.getTime());
 				String message = String.format("%s%n%s%n%n","Exiting the system...","Thank you! Goodbye!");
 				LoginFrame.setVisible(false);
 				JOptionPane.showMessageDialog(null,message);
@@ -630,6 +637,7 @@ JFrame LoginFrame;
 				OptionFrame.setVisible(false);
 				passwordInput.setText("");
 				usernameInput.setText("");
+				showPromotions = false;
 			}
 		});
 		
