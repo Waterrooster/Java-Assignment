@@ -8,8 +8,6 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.GroupLayout.Alignment;
-
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.awt.Dimension;
@@ -22,16 +20,16 @@ import java.text.SimpleDateFormat;
 import java.util.Timer;
 import java.util.Random;
 import java.util.TimerTask;
-//java
+
 //Represents an automated teller machine
 
 public class ATM implements Runnable
 {
 	Account account;
 // no-argument ATM constructor initializes instance variables
-	 ArrayList<Integer> promotions = new ArrayList<>();
-	 ArrayList<String> data= new ArrayList<>();
-	 String message = "";
+	ArrayList<Integer> promotions = new ArrayList<>();
+	ArrayList<String> data= new ArrayList<>();
+	String message = "";
 	JFrame promotionWindow;
 	JFrame OptionFrame;
 	JFrame DepositFrame;
@@ -47,12 +45,12 @@ public class ATM implements Runnable
 	JTextField depositInput;
 	int CANCELED = 0;
 	 boolean userAuthenticated= false; // whether user is authenticated
-	 int currentAccountNumber;	 
+	 int currentAccountNumber;	
 	 CashDispenser cashDispenser = new CashDispenser(); // ATM's cash dispenser
 	 DepositSlot depositSlot = new DepositSlot(); // ATM's deposit slot
 	 BankDatabase bankDatabase = new BankDatabase();
 	 boolean showPromotions = true;
-	 String threadMessage = "";
+	 static String threadMessage = "";
 	 String customerName;
 	 long threadId;
 public ATM(Account acc)
@@ -187,7 +185,7 @@ JFrame LoginFrame;
 					Calendar cal = Calendar.getInstance();
 					currentAccountNumber = accountNumber;
 					customerName = account.getName(currentAccountNumber);
-					threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s  %s %n",threadId,customerName,"Customer Login", dateFormat.format(date),time.format(cal.getTime()));
+					threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s   End time: %s %n",threadId,customerName,"Customer Login", dateFormat.format(date),time.format(cal.getTime()));
 
 					LoginFrame.setVisible(false);
 			      String promotions = String.format("%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n","1. Get 10% cash back offer on every purchase at shopping malls",
@@ -554,10 +552,8 @@ JFrame LoginFrame;
 			 JButton withdrawal;
 			 JButton exit;
 			 JButton statement;
-
-			
-			
-			JPanel panel = new JPanel();
+	
+		JPanel panel = new JPanel();
 		balance  = new JButton("Balance");
 		deposit = new JButton("Deposit");
 		withdrawal = new JButton("Withdrawal");
@@ -566,7 +562,6 @@ JFrame LoginFrame;
 		OptionFrame.add(panel);
 		OptionFrame.setSize(400,200);
 		OptionFrame.setVisible(true);
-		
 		panel.add(balance);
 		panel.add(deposit);
 		panel.add(withdrawal);
@@ -622,7 +617,7 @@ JFrame LoginFrame;
 				DateFormat time = new SimpleDateFormat("HH:mm:ss");
 				Calendar cal = Calendar.getInstance();
 
-		 		threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s  %s %n",threadId,customerName,"Log out", dateFormat.format(date),time.format(cal.getTime()));
+				threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s   End time: %s %n",threadId,customerName,"Customer Logged out", dateFormat.format(date),time.format(cal.getTime()));
 				String message = String.format("%s%n%s%n%n","Exiting the system...","Thank you! Goodbye!");
 				LoginFrame.setVisible(false);
 				JOptionPane.showMessageDialog(null,message);
@@ -720,7 +715,7 @@ JFrame LoginFrame;
 				         bankDatabase.credit( currentAccountNumber, depositAmount ); 
 				         
 				 		Transaction foo = new BalanceInquiry(currentAccountNumber,bankDatabase);
-				 		threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s  %s %n",threadId,customerName,"Deposit", dateFormat.format(date),time.format(cal.getTime()));
+						threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s   End time: %s %n",threadId,customerName,"Deposit", dateFormat.format(date),time.format(cal.getTime()));
 
 						message += String.format("%n%s%n%s%nTransaction type: Deposit%nTransaction amount: $%.2f%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),depositAmount,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber)-depositAmount,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
 								String localStatement = String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%.2f%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),depositAmount,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber)-depositAmount,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
@@ -872,7 +867,7 @@ JFrame LoginFrame;
 			WithdrawalFrame.setVisible(false);
 			OptionFrame.setVisible(true);
 			Transaction foo = new BalanceInquiry(currentAccountNumber,bankDatabase);
-	 		threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s  %s %n",threadId,customerName,"Withdrawal", dateFormat.format(date),time.format(cal.getTime()));
+			threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s   End time: %s %n",threadId,customerName,"Withdrawal", dateFormat.format(date),time.format(cal.getTime()));
 			message += String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
 					String localStatement = String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
 					data.add(localStatement);
@@ -888,7 +883,7 @@ JFrame LoginFrame;
 			WithdrawalFrame.setVisible(false);
 			OptionFrame.setVisible(true);
 			Transaction foo = new BalanceInquiry(currentAccountNumber,bankDatabase);
-	 		threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s  %s %n",threadId,customerName,"Withdrawal", dateFormat.format(date),time.format(cal.getTime()));
+			threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s   End time: %s %n",threadId,customerName,"Withdrawal", dateFormat.format(date),time.format(cal.getTime()));
 			message += String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
 					String localStatement = String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
 					data.add(localStatement);
@@ -904,7 +899,7 @@ JFrame LoginFrame;
 			WithdrawalFrame.setVisible(false);
 			OptionFrame.setVisible(true);
 			Transaction foo = new BalanceInquiry(currentAccountNumber,bankDatabase);
-	 		threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s  %s %n",threadId,customerName,"Withdrawal", dateFormat.format(date),time.format(cal.getTime()));
+			threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s   End time: %s %n",threadId,customerName,"Withdrawal", dateFormat.format(date),time.format(cal.getTime()));
 	 		message += String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
 					String localStatement = String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
 					data.add(localStatement);
@@ -920,7 +915,7 @@ JFrame LoginFrame;
 			WithdrawalFrame.setVisible(false);
 			OptionFrame.setVisible(true);
 			Transaction foo = new BalanceInquiry(currentAccountNumber,bankDatabase);
-	 		threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s  %s %n",threadId,customerName,"Withdrawal", dateFormat.format(date),time.format(cal.getTime()));
+			threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s   End time: %s %n",threadId,customerName,"Withdrawal", dateFormat.format(date),time.format(cal.getTime()));
 	 		message += String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
 					String localStatement = String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
 					data.add(localStatement);
@@ -936,7 +931,7 @@ JFrame LoginFrame;
 			WithdrawalFrame.setVisible(false);
 			OptionFrame.setVisible(true);
 			Transaction foo = new BalanceInquiry(currentAccountNumber,bankDatabase);
-	 		threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s  %s %n",threadId,customerName,"Withdrawal", dateFormat.format(date),time.format(cal.getTime()));
+			threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s   End time: %s %n",threadId,customerName,"Withdrawal", dateFormat.format(date),time.format(cal.getTime()));
 	 		message += String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
 					String localStatement = String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
 					data.add(localStatement);
@@ -951,7 +946,7 @@ JFrame LoginFrame;
 			DateFormat time = new SimpleDateFormat("HH:mm:ss");
 			Calendar cal = Calendar.getInstance();
 
-			threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s  %s %n",threadId,customerName,"Checking Balance", dateFormat.format(date),time.format(cal.getTime()));
+			threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s   End time: %s %n",threadId,customerName,"Withdrawal", dateFormat.format(date),time.format(cal.getTime()));
 			Transaction transaction = new BalanceInquiry(currentAccountNumber,bankDatabase);
 			transaction.execute();
 		}
@@ -991,7 +986,7 @@ JFrame LoginFrame;
 			Date date = new Date();
 			DateFormat time = new SimpleDateFormat("HH:mm:ss");
 			Calendar cal = Calendar.getInstance();
-			threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s  %s %n",threadId,customerName,"Viewed complete statement", dateFormat.format(date),time.format(cal.getTime()));
+			threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s   End time: %s %n",threadId,customerName,"Viewed complete statement", dateFormat.format(date),time.format(cal.getTime()));
 
 			JOptionPane.showMessageDialog(null,message);
 			statementFrame.setVisible(false);
@@ -999,7 +994,6 @@ JFrame LoginFrame;
 		}
 		public void init()
 		{
-
 			 modifiedStatement = new JFrame(customerName);
 			JPanel panel = new JPanel();
 			JLabel label1 = new JLabel("Start Date");
@@ -1047,7 +1041,7 @@ JFrame LoginFrame;
 				Date date = new Date();
 				DateFormat time = new SimpleDateFormat("HH:mm:ss");
 				Calendar cal = Calendar.getInstance();
-				threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s  %s %n",threadId,customerName,"Viewed Statement.", dateFormat.format(date),time.format(cal.getTime()));
+				threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s   End time: %s %n",threadId,customerName,"Viewed statement", dateFormat.format(date),time.format(cal.getTime()));
 
 
 				Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -1090,9 +1084,8 @@ JFrame LoginFrame;
 		               cashDispenser.dispenseCash( amount ); // dispense cash
 		               cashDispensed = true; // cash was dispensed
 		               // instruct user to take cash
-
 		               // get the available balance for the account involved
-		              availableBalance = 
+		               availableBalance = 
 		                  bankDatabase.getAvailableBalance( currentAccountNumber );
 
 		               // get the total balance for the account involved
@@ -1125,8 +1118,7 @@ JFrame LoginFrame;
 		  		break;
 		      } // end else
 		   } while ( !cashDispensed );
-
-		}
+	}
 		public void statementGeneration(){
 			 String statementMessage = "";
 			 String startingDate;
