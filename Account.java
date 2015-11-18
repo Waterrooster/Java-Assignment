@@ -44,52 +44,7 @@ public String getLastName()
 {
 	return lastName;
 }
-public String getName(int accNumber)
-{
-	int accountNumber = accNumber;
-	String name = "";
-	if(accountNumber == 11111)
-	{
-		name= "Kevin Spacey";
-	}
-	if(accountNumber == 22222)
-	{
-		name= "Sheryl Brain";
-	}
-	if(accountNumber == 33333)
-	{
-		name= "Darth Vader";
-	}
-	if(accountNumber == 44444)
-	{
-		name= "Han Solo";
-	}
-	if(accountNumber == 55555)
-	{
-		name= "Peter Mayhew";
-	}
-	if(accountNumber == 66666)
-	{
-		name = "Clairie Underwood";
-	}
-	if(accountNumber == 77777)
-	{
-		name = "Doug Stamper";
-	}
-	if(accountNumber == 88888)
-	{
-		name = "Garret Walker";
-	}
-	if(accountNumber == 99999)
-	{
-		name = "Linda Vasquez";
-	}
-	if(accountNumber == 12345)
-	{
-		name = "Gillian Cole";
-	}
-	return name;
-}
+
 // returns available balance
 public double getAvailableBalance()
 {

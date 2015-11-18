@@ -28,14 +28,11 @@ public class CurrentDate {
 		sdf.setLenient(false);
 		
 		try {
-			
-			//if not valid, it will throw ParseException
-			Date date = sdf.parse(dateToValidate);
+			sdf.parse(dateToValidate);
 		
 		} catch (ParseException e) {
 			return false;
 		}
-		
 		return true;
 	}
    public static boolean checkDatebetweenDates(String startDate,String endDate,String currentDate) throws ParseException
@@ -44,7 +41,6 @@ public class CurrentDate {
 	   Date startingDate = datefrmt.parse(startDate);
 	   Date endingDate = datefrmt.parse(endDate);
 	   Date checkDate = datefrmt.parse(currentDate);
-	   
 	   if(checkDate.after(startingDate) && checkDate.before(endingDate))
 	   {
 		   return true;
