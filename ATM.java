@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Timer;
 import java.util.Random;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 //Represents an automated teller machine
 
@@ -52,7 +53,10 @@ public class ATM implements Runnable
 	 static String threadMessage = "";
 	 String customerName;
 	 long threadId;
-
+	 long startTime;
+	 long endTime;
+	 long totalTime;
+	 
 public void setThreadId(long id) {
 	threadId = id;
 }
@@ -180,7 +184,7 @@ JFrame LoginFrame;
 					currentAccountNumber = accountNumber;
 					customerName = bankDatabase.getName(currentAccountNumber);
 					threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s    %s %n",threadId,customerName,"Customer Login", dateFormat.format(date),time.format(cal.getTime()));
-
+					startTime = cal.getTimeInMillis();
 					LoginFrame.setVisible(false);
 			      String promotions = String.format("%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n","1. Get 10% cash back offer on every purchase at shopping malls",
 			    		  "2. Deposit 10,000$ within first 10 days of opening a new account and get 200$ back",
@@ -610,8 +614,13 @@ JFrame LoginFrame;
 				Date date = new Date();
 				DateFormat time = new SimpleDateFormat("HH:mm:ss");
 				Calendar cal = Calendar.getInstance();
-
-				threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Endtime: %s    %s %n",threadId,customerName,"Customer Logged out", dateFormat.format(date),time.format(cal.getTime()));
+				endTime = System.currentTimeMillis();
+				totalTime = endTime-startTime;
+				
+				long hours = TimeUnit.MILLISECONDS.toHours(totalTime);
+				long mins = TimeUnit.MILLISECONDS.toMinutes(totalTime);
+				long secs = TimeUnit.MILLISECONDS.toSeconds(totalTime);
+				threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Endtime: %s    %s  Total time: %d:%d:%d %n",threadId,customerName,"Customer Logged out", dateFormat.format(date),time.format(cal.getTime()),hours,mins,secs);
 				String message = String.format("%s%n%s%n%n","Exiting the system...","Thank you! Goodbye!");
 				ATMCaseStudy.activeCustomers--;
 				LoginFrame.setVisible(false);
@@ -622,7 +631,6 @@ JFrame LoginFrame;
 				usernameInput.setText("");
 			}
 		});
-		
 		}
 		public void deposit()
 		{
