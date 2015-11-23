@@ -22,8 +22,6 @@ import java.util.Random;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
-//Represents an automated teller machine
-
 public class ATM implements Runnable
 {
 // no-argument ATM constructor initializes instance variables
@@ -990,8 +988,14 @@ JFrame LoginFrame;
 			DateFormat time = new SimpleDateFormat("HH:mm:ss");
 			Calendar cal = Calendar.getInstance();
 			threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s    %s %n",threadId,customerName,"Viewed complete statement", dateFormat.format(date),time.format(cal.getTime()));
-
-			JOptionPane.showMessageDialog(null,message);
+			if(message == "")
+			{
+				JOptionPane.showMessageDialog(null, "No transactions made.");
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(null,message);	
+			}
 			statementFrame.setVisible(false);
 			OptionFrame.setVisible(true);
 		}
