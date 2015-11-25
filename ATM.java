@@ -87,8 +87,7 @@ JTextField usernameInput;
 JTextField passwordInput;
 JFrame LoginFrame;
 	public void startWindow()
-	{
-
+	{	        
 		LoginFrame = new JFrame("Login Window");
 		JPanel panel = new JPanel();
 		
@@ -615,10 +614,8 @@ JFrame LoginFrame;
 				endTime = System.currentTimeMillis();
 				totalTime = endTime-startTime;
 				
-				long hours = TimeUnit.MILLISECONDS.toHours(totalTime);
-				long mins = TimeUnit.MILLISECONDS.toMinutes(totalTime);
 				long secs = TimeUnit.MILLISECONDS.toSeconds(totalTime);
-				threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Endtime: %s    %s  Total time: %d:%d:%d %n",threadId,customerName,"Customer Logged out", dateFormat.format(date),time.format(cal.getTime()),hours,mins,secs);
+				threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Endtime: %s    %s  Total time: %d seconds %n",threadId,customerName,"Customer Logged out", dateFormat.format(date),time.format(cal.getTime()),secs);
 				String message = String.format("%s%n%s%n%n","Exiting the system...","Thank you! Goodbye!");
 				ATMCaseStudy.activeCustomers--;
 				LoginFrame.setVisible(false);
