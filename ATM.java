@@ -347,52 +347,52 @@ public void showPanel(JPanel panelName)
 			PromotionWindowPanel.add(submit);
 			   promo1.addActionListener(new ActionListener(){
 				   public void actionPerformed(ActionEvent e){
-					promotion1();   
+					promotion(1);   
 				   }
 			   });   
 			   promo2.addActionListener(new ActionListener(){
 				   public void actionPerformed(ActionEvent e){
-					promotion2();   
+					promotion(2);   
 				   }
 			   });   
 			   promo3.addActionListener(new ActionListener(){
 				   public void actionPerformed(ActionEvent e){
-					promotion3();   
+					promotion(3);   
 				   }
 			   });  
 			   promo4.addActionListener(new ActionListener(){
 				   public void actionPerformed(ActionEvent e){
-					promotion4();   
+					promotion(4);   
 				   }
 			   });   
 			   promo5.addActionListener(new ActionListener(){
 				   public void actionPerformed(ActionEvent e){
-					promotion5();   
+					promotion(5);   
 				   }
 			   });   
 			   promo6.addActionListener(new ActionListener(){
 				   public void actionPerformed(ActionEvent e){
-					promotion6();   
+					promotion(6);   
 				   }
 			   }); 
 			   promo7.addActionListener(new ActionListener(){
 				   public void actionPerformed(ActionEvent e){
-					promotion7();   
+					promotion(7);   
 				   }
 			   });   
 			   promo8.addActionListener(new ActionListener(){
 				   public void actionPerformed(ActionEvent e){
-					promotion8();   
+					promotion(8);   
 				   }
 			   });   
 			   promo9.addActionListener(new ActionListener(){
 				   public void actionPerformed(ActionEvent e){
-					promotion9();   
+					promotion(9);   
 				   }
 			   });   
 			   promo10.addActionListener(new ActionListener(){
 				   public void actionPerformed(ActionEvent e){
-					promotion10();   
+					promotion(10);   
 				   }
 			   });  
 			   
@@ -409,119 +409,17 @@ public void showPanel(JPanel panelName)
 			 hidePanel(OptionWindowPanel);
 			 showPanel(PromotionWindowPanel);	 
 		}
-		public void promotion1(){
-			
-				if(promotions.indexOf(1) == -1)
-				{
-					promotions.add(1);	
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null, "Please choose another promotion");
-				}	
-		}
-		public void promotion2(){
-			
-				if(promotions.indexOf(2) == -1)
-				{
-					promotions.add(2);	
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null, "Please choose another promotion");
-				}	
-		}
-		public void promotion3(){
-			
-				if(promotions.indexOf(3) == -1)
-				{
-					promotions.add(3);	
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null, "Please choose another promotion");
-				}	
-		}
-		public void promotion4(){
-			
-				if(promotions.indexOf(4) == -1)
-				{
-					promotions.add(4);	
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null, "Please choose another promotion");
-				}	
-		}
-		public void promotion5(){
-			
-				if(promotions.indexOf(5) == -1)
-				{
-					promotions.add(5);	
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null, "Please choose another promotion");
-				}	
-			
-		}
-		public void promotion6(){
-			
-				if(promotions.indexOf(6) == -1)
-				{
-					promotions.add(6);	
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null, "Please choose another promotion");
-				}	
-			
-		}
-		public void promotion7(){
-			
-				if(promotions.indexOf(7) == -1)
-				{
-					promotions.add(7);	
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null, "Please choose another promotion");
-				}	
-			
-		}
-		public void promotion8(){
-			
-				if(promotions.indexOf(8) == -1)
-				{
-					promotions.add(8);	
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null, "Please choose another promotion");
-				}	
-			
-		}
-		public void promotion9(){
-				if(promotions.indexOf(9) == -1)
-				{
-					promotions.add(9);	
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null, "Please choose another promotion");
-				}	
-		}
-		public void promotion10(){
-			
-				if(promotions.indexOf(10) == -1)
-				{
-					promotions.add(10);	
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null, "Please choose another promotion");
-				}	
-			
+		void promotion(int promoNumber)
+		{
+			int promotionNumber = promoNumber;
+			if(promotions.indexOf(promotionNumber) == -1)
+			{
+				promotions.add(promotionNumber);
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(null, "Please choose another promotion");	
+			}
 		}
 		public void submitPromotions()
 		{
