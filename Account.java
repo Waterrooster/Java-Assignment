@@ -76,4 +76,8 @@ public int getAccountNumber()
 {
    return accountNumber;  
 } // end method getAccountNumber
+
+public String getName() {
+	return getFirstName() + " " + getLastName();
+}
 } // end class Account

@@ -4,6 +4,8 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +16,8 @@ public class ATMCaseStudy
 {
 	List<Thread> threads = new ArrayList<>();
 	static int activeCustomers = 0;
-	
+	ATM atm= new ATM(this);
+	JComboBox<String> customerList;
 	public void run()
 	{		
 		JFrame customerSetupWindow = new JFrame("Spawn customer window.");
@@ -22,14 +25,36 @@ public class ATMCaseStudy
 		JButton spawnCustomer = new JButton("Spawn new customer");
 		JButton showActivity = new JButton("Show Customer Activity");
 		JButton activeCustomerInfo = new JButton("Active Customers");
+		JButton exit = new JButton("Exit");
+		customerList = new JComboBox<String>();
+		customerList.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+		        int state = e.getStateChange();
+		        if(state == ItemEvent.SELECTED) {
+			        String customerName = (String) e.getItem();
+		        	atm.setCustomer(customerName);
+		        }
+			}
+		});
 		customerSetupWindow.add(customerSetupWindowPanel);
 		customerSetupWindowPanel.add(spawnCustomer);
 		customerSetupWindowPanel.add(showActivity);
 		customerSetupWindowPanel.add(activeCustomerInfo);
+		customerSetupWindowPanel.add(customerList);
+		customerSetupWindowPanel.add(exit);
+
 		customerSetupWindow.setVisible(true);
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		customerSetupWindow.setLocation(dim.width/2-customerSetupWindow.getSize().width/2, dim.height/2-customerSetupWindow.getSize().height/2);
 		customerSetupWindow.setSize(400,200);
+		exit.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e)
+			{
+				exit();
+			}
+		});
 		spawnCustomer.addActionListener(new ActionListener(){
 		public void actionPerformed(ActionEvent e){
 			spawnCustomer();}
@@ -47,12 +72,25 @@ public class ATMCaseStudy
 			}
 		});
 	}
+	
+	
+	ArrayList<String> customerLst = new ArrayList<>();
+	
+	
+	public void addCustomer(String customerName) {
+		if(!customerLst.contains(customerName))
+		{
+			customerList.addItem(customerName);	
+			customerLst.add(customerName);
+		}		
+	}
+	
 	public void spawnCustomer()
 	{
 		if(activeCustomers<=10)
 		{
 			activeCustomers++;
-			ATM atm = new ATM();
+			atm.showLoginWindow();
 			Thread thread = new Thread(atm);
 			atm.setThreadId(thread.getId());
 			threads.add(thread);
@@ -77,8 +115,12 @@ public class ATMCaseStudy
 	}
 	public void activeCustomerInfo()
 	{
-		String activeCustomer = String.format("Currently active customers in the bank: %d", activeCustomers);
+		String activeCustomer = String.format("Currently active customers in the bank: %d", customerList.getItemCount());
 		JOptionPane.showMessageDialog(null,activeCustomer);
+	}
+	public void exit()
+	{
+		System.exit(0);
 	}
 	public static void main(String[] args)
 	{
