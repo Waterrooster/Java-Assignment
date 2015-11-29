@@ -28,14 +28,19 @@ public class ATM implements Runnable
 	ArrayList<Integer> promotions = new ArrayList<>();
 	ArrayList<String> data= new ArrayList<>();
 	String message = "";
-	JFrame promotionWindow;
-	JFrame OptionFrame;
-	JFrame DepositFrame;
-	JFrame WithdrawalFrame;
-	JFrame statementFrame;
+	 String customerName;
+	JFrame AtmWindow = new JFrame(customerName);
+	
+	JPanel LoginPanel = new JPanel();
+	JPanel OptionWindowPanel = new JPanel();
+	JPanel PromotionWindowPanel = new JPanel();
+	JPanel BalanceWindowPanel = new JPanel();
+	JPanel DepositWindowPanel = new JPanel();
+	JPanel WithdrawalWindowPanel = new JPanel();
+	JPanel StatementWindowPanel	= new JPanel();
+	JPanel ModifiedWindowPanel = new JPanel();
+	
 	int withdrawalValue;
-	JFrame modifiedStatement;
-	boolean initCompleted = false;
 	JTextField startDate;
 	JTextField endDate;
 	int amount;
@@ -47,131 +52,122 @@ public class ATM implements Runnable
 	 CashDispenser cashDispenser = new CashDispenser(); // ATM's cash dispenser
 	 DepositSlot depositSlot = new DepositSlot(); // ATM's deposit slot
 	 BankDatabase bankDatabase = new BankDatabase();
-	 boolean showPromotions = true;
+	 boolean promotionsSelected = true;
 	 static String threadMessage = "";
-	 String customerName;
 	 long threadId;
 	 long startTime;
 	 long endTime;
 	 long totalTime;
+	 JTextField usernameInput;
+	 JTextField passwordInput;
+	 ATMCaseStudy atmObject;
+
 	 
 public void setThreadId(long id) {
 	threadId = id;
 }
 
-public void run()
-{				
-		startWindow();
-		if(userAuthenticated)
-		{
-			performTransactions();
-		}
-		userAuthenticated = false;
-		currentAccountNumber = 0;
-}
-private void performTransactions() 
-{
-   boolean userExited = false; // user has not chosen to exit
-
-   // loop while user has not chosen option to exit system
-   if( !userExited )
-   {     
-      // show main menu and get user selection
-	   LoginFrame.setVisible(false);
-	   OptionFrame.setVisible(true);
-	   
-   } // end while
-} // end method performTransactions
-
-JTextField usernameInput;
-JTextField passwordInput;
-JFrame LoginFrame;
-	public void startWindow()
-	{	        
-		LoginFrame = new JFrame("Login Window");
-		JPanel panel = new JPanel();
+	public ATM(ATMCaseStudy atmObject) {
+		this.atmObject = atmObject;
+		AtmWindow.setSize(400, 200);
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		AtmWindow.setLocation(dim.width/2-AtmWindow.getSize().width/2, dim.height/2-AtmWindow.getSize().height/2);
 		
-		JButton verify;
-
-		LoginFrame.add(panel);
-		
-		JLabel label = new JLabel("Welcome");
-			JLabel label1 = new JLabel("Account number");
-			JLabel label2 = new JLabel("Password");
-			usernameInput = new JTextField();
-			passwordInput = new JPasswordField();
-			verify = new JButton("Verify");
-			panel.add(verify);
-			
-			GroupLayout layout = new GroupLayout(panel);
-			   panel.setLayout(layout);
-			   
-			   // Turn on automatically adding gaps between components
-			   layout.setAutoCreateGaps(true);
-			   
-			   // Turn on automatically creating gaps between components that touch
-			   // the edge of the container and the container.
-			   layout.setAutoCreateContainerGaps(true);
-			   
-			   // Create a sequential group for the horizontal axis.
-			   
-			   GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
-			   
-			   // The sequential group in turn contains two parallel groups.
-			   // One parallel group contains the labels, the other the text fields.
-			   // Putting the labels in a parallel group along the horizontal axis
-			   // positions them at the same x location.
-			   // Variable indentation is used to reinforce the level of grouping.
-			   hGroup.addGroup(layout.createParallelGroup().
-					   addComponent(label));
-			   hGroup.addGroup(layout.createParallelGroup().
-			            addComponent(label1).addComponent(label2));
-			   hGroup.addGroup(layout.createParallelGroup().
-			            addComponent(usernameInput).addComponent(passwordInput));
-			   hGroup.addGroup(layout.createParallelGroup().addComponent(verify));
-			   layout.setHorizontalGroup(hGroup);
-			   
-			   // Create a sequential group for the vertical axis.
-			   GroupLayout.SequentialGroup vGroup = layout.createSequentialGroup();
-			   
-			   // The sequential group contains two parallel groups that align
-			   // the contents along the baseline. The first parallel group contains
-			   // the first label and text field, and the second parallel group contains
-			   // the second label and text field. By using a sequential group
-			   // the labels and text fields are positioned vertically after one another.
-			   vGroup.addGroup(layout.createParallelGroup(Alignment.CENTER).addComponent(label));
-			   vGroup.addGroup(layout.createParallelGroup(Alignment.BASELINE).
-			            addComponent(label1).addComponent(usernameInput));
-			   vGroup.addGroup(layout.createParallelGroup(Alignment.BASELINE).
-					   addComponent(label2).addComponent(passwordInput));
-			   vGroup.addGroup(layout.createParallelGroup(Alignment.CENTER).addComponent(verify));
-			   layout.setVerticalGroup(vGroup);
-			   			   
-			   LoginFrame.setVisible(true);
-			   LoginFrame.setSize(400,200);
-			   
-			   Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-			   LoginFrame.setLocation(dim.width/2-LoginFrame.getSize().width/2, dim.height/2-LoginFrame.getSize().height/2);
-			   
-			   verify.addActionListener(new ActionListener() {
-				   public void actionPerformed(ActionEvent e) {
-					   authenticate();
-				   }
-			   });
+		createLoginPanel();
+		createOptionPanel();
+		createStatementPanel();
+		createModifiedPanel();
+		createPromotionPanel();
+		createDepositPanel();
+		createWithdrawalPanel();
 	}
+
+	
+	JPanel currentPanel;
+	
+public void showLoginWindow() {
+	AtmWindow.setTitle("");
+	usernameInput.setText("");
+	passwordInput.setText("");
+	AtmWindow.setVisible(true);
+	AtmWindow.getContentPane().removeAll();
+	AtmWindow.revalidate();
+	AtmWindow.repaint();
+	showPanel(LoginPanel);	
+}
+
+public void run()
+{					
+	showLoginWindow();
+}
+
+public void hidePanel(JPanel panelName)
+{
+	AtmWindow.getContentPane().removeAll();
+	AtmWindow.revalidate();
+	AtmWindow.repaint();
+}
+public void showPanel(JPanel panelName)
+{
+	currentPanel = panelName;
+	AtmWindow.getContentPane().add(panelName);
+	AtmWindow.revalidate();
+	AtmWindow.repaint();
+}
+ void createLoginPanel()
+{
+	JButton verify;		
+	JLabel label = new JLabel("Welcome");
+		JLabel label1 = new JLabel("Account number");
+		JLabel label2 = new JLabel("Password");
+		usernameInput = new JTextField();
+		passwordInput = new JPasswordField();
+		verify = new JButton("Verify");
+		LoginPanel.add(verify);
+		
+		GroupLayout layout = new GroupLayout(LoginPanel);
+		   LoginPanel.setLayout(layout);
+		   
+		   layout.setAutoCreateGaps(true);
+		   
+		   layout.setAutoCreateContainerGaps(true);
+		   GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
+		   hGroup.addGroup(layout.createParallelGroup().
+				   addComponent(label));
+		   hGroup.addGroup(layout.createParallelGroup().
+		            addComponent(label1).addComponent(label2));
+		   hGroup.addGroup(layout.createParallelGroup().
+		            addComponent(usernameInput).addComponent(passwordInput));
+		   hGroup.addGroup(layout.createParallelGroup().addComponent(verify));
+		   layout.setHorizontalGroup(hGroup);
+		   
+		   
+		   GroupLayout.SequentialGroup vGroup = layout.createSequentialGroup();
+		   
+		   vGroup.addGroup(layout.createParallelGroup(Alignment.CENTER).addComponent(label));
+		   vGroup.addGroup(layout.createParallelGroup(Alignment.BASELINE).
+		            addComponent(label1).addComponent(usernameInput));
+		   vGroup.addGroup(layout.createParallelGroup(Alignment.BASELINE).
+				   addComponent(label2).addComponent(passwordInput));
+		   vGroup.addGroup(layout.createParallelGroup(Alignment.CENTER).addComponent(verify));
+		   layout.setVerticalGroup(vGroup);
+		   
+		   verify.addActionListener(new ActionListener() {
+			   public void actionPerformed(ActionEvent e) {
+				   authenticate();
+			   }
+		   });
+}
 	
 	public void authenticate() {
 		try
 		{
 			int accountNumber = Integer.parseInt(usernameInput.getText());// input account number
 			   int pin = Integer.parseInt(passwordInput.getText()); // input PIN
-			   
-			   
-			   // set userAuthenticated to boolean value returned by database
+
 			   userAuthenticated = 
 			      bankDatabase.authenticateUser( accountNumber, pin );
-			   
-			   // check whether authentication succeeded
+
 			   if (userAuthenticated )
 			   {
 					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -182,40 +178,138 @@ JFrame LoginFrame;
 					customerName = bankDatabase.getName(currentAccountNumber);
 					threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s    %s %n",threadId,customerName,"Customer Login", dateFormat.format(date),time.format(cal.getTime()));
 					startTime = cal.getTimeInMillis();
-					LoginFrame.setVisible(false);
-			      String promotions = String.format("%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n","1. Get 10% cash back offer on every purchase at shopping malls",
-			    		  "2. Deposit 10,000$ within first 10 days of opening a new account and get 200$ back",
-			    		  "3. Get 20% cashback on every purchase at dining services",
-			    		  "4. Spend 500$ at any disney store with disney card and get 20% cashback",
-			    		  "5. Create a new student account for your child and get 5% on every purchase on school suplies",
-			    		  "6. Get a new travel rewards card and earn 5000 miles in Emirates airlines",
-			    		  "7. Apply for new credit card before festival and get 10% discount on any purchase during festival.",
-			    		  "8. Deposit 1000$ in your child student account and get 30% cashback on every purchase on school supplies",
-			    		  "9. Fly around world with your travel credit card and get extra miles on every fly",
-			    		  "10. Earn 9% cashback ");
-			      
-			      if(showPromotions)
-			      {
-				      JOptionPane.showMessageDialog(null,promotions);
-			    	  startPromotionWindow();
-			    	  showPromotions = false;
-			      }
-			      else
-			      {
-			    	  startOptionWindow();
-			      }
-			   } // end if
+					startOptionWindow();
+					AtmWindow.setTitle(customerName);
+					atmObject.addCustomer(customerName);
+					}
 			   else
 			   {
+				   usernameInput.setText("");
+				   passwordInput.setText("");
 				   JOptionPane.showMessageDialog(null,"Invalid Account number or Pin. Please try again!");
 			   }	
 		}catch(Exception error){
 			JOptionPane.showMessageDialog(null,"Please provide valid account details");
 		}
 	}
-		public void startPromotionWindow()
+  void createOptionPanel()
+	{
+		 JButton balance;
+		 JButton deposit;
+		 JButton withdrawal;
+		 JButton exit;
+		 JButton statement;
+		 JButton promotions;
+		 JLabel customerNameLabel = new JLabel("");
+		 customerNameLabel.setText(customerName);
+	balance  = new JButton("Balance");
+	deposit = new JButton("Deposit");
+	withdrawal = new JButton("Withdrawal");
+	exit = new JButton("Exit");
+	statement = new JButton("Statement");
+	promotions = new JButton("Promotions");
+	
+	OptionWindowPanel.add(customerNameLabel);
+	OptionWindowPanel.add(balance);
+	OptionWindowPanel.add(deposit);
+	OptionWindowPanel.add(withdrawal);
+	OptionWindowPanel.add(exit);
+	OptionWindowPanel.add(statement);
+	OptionWindowPanel.add(promotions);
+	
+	GroupLayout layout = new GroupLayout(OptionWindowPanel);
+	   OptionWindowPanel.setLayout(layout);
+	  layout.setAutoCreateGaps(true);
+	  layout.setAutoCreateContainerGaps(true);
+	  
+	  GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
+	   hGroup.addGroup(layout.createParallelGroup().addComponent(balance).addComponent(deposit));
+	   hGroup.addGroup(layout.createParallelGroup().addComponent(withdrawal).addComponent(statement));
+	   hGroup.addGroup(layout.createParallelGroup().addComponent(promotions).addComponent(exit));
+	   
+	   layout.setHorizontalGroup(hGroup);
+	   
+	   GroupLayout.ParallelGroup vGroup = layout.createParallelGroup();
+	   vGroup.addGroup(layout.createSequentialGroup().addComponent(balance).addComponent(deposit));
+	   vGroup.addGroup(layout.createSequentialGroup().addComponent(withdrawal).addComponent(statement));
+	   vGroup.addGroup(layout.createSequentialGroup().addComponent(promotions).addComponent(exit));
+	   layout.setVerticalGroup(vGroup);
+	
+	promotions.addActionListener(new ActionListener(){
+		public void actionPerformed(ActionEvent e)
 		{
-			 promotionWindow = new JFrame(customerName);
+			String promotionList = String.format("%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n","1. Get 10% cash back offer on every purchase at shopping malls",
+		    		  "2. Deposit 10,000$ within first 10 days of opening a new account and get 200$ back",
+		    		  "3. Get 20% cashback on every purchase at dining services",
+		    		  "4. Spend 500$ at any disney store with disney card and get 20% cashback",
+		    		  "5. Create a new student account for your child and get 5% on every purchase on school suplies",
+		    		  "6. Get a new travel rewards card and earn 5000 miles in Emirates airlines",
+		    		  "7. Apply for new credit card before festival and get 10% discount on any purchase during festival.",
+		    		  "8. Deposit 1000$ in your child student account and get 30% cashback on every purchase on school supplies",
+		    		  "9. Fly around world with your travel credit card and get extra miles on every fly",
+		    		  "10. Earn 9% cashback ");
+			JOptionPane.showMessageDialog(null,promotionList);
+			startPromotionWindow();
+		}
+	});
+		deposit.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				deposit();
+			}
+		});
+		withdrawal.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e)
+			{
+				 withdrawal();
+			}
+		});
+	balance.addActionListener(new ActionListener(){
+		public void actionPerformed(ActionEvent e)
+		{
+			balance();
+		}
+	});
+	statement.addActionListener(new ActionListener(){
+		public void actionPerformed(ActionEvent e){
+			statement();
+		}
+	});
+	exit.addActionListener(new ActionListener(){
+		public void actionPerformed(ActionEvent e){
+			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+			Date date = new Date();
+			DateFormat time = new SimpleDateFormat("HH:mm:ss");
+			Calendar cal = Calendar.getInstance();
+			endTime = System.currentTimeMillis();
+			totalTime = endTime-startTime;
+			
+			long secs = TimeUnit.MILLISECONDS.toSeconds(totalTime);
+			threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Endtime: %s    %s  Total time: %d seconds %n",threadId,customerName,"Customer Logged out", dateFormat.format(date),time.format(cal.getTime()),secs);
+			String message = String.format("%s%n%s%n%n","Exiting the system...","Thank you! Goodbye!");
+			ATMCaseStudy.activeCustomers--;
+			JOptionPane.showMessageDialog(null,message);
+			JOptionPane.showMessageDialog(null,threadMessage);
+			AtmWindow.dispose();
+		}
+	});
+	}
+		
+  public void setCustomer(String currentCustomerName)
+  {
+	  this.customerName = currentCustomerName;
+	  this.currentAccountNumber = bankDatabase.getAccountNumber(currentCustomerName);
+	  AtmWindow.setTitle(customerName);
+	  AtmWindow.getContentPane().removeAll();
+	  showPanel(OptionWindowPanel);
+  }
+  
+		public void startOptionWindow()
+		{
+			hidePanel(LoginPanel);
+			showPanel(OptionWindowPanel);
+		}
+		public void createPromotionPanel()
+		{
 			 JButton submit;
 			 JButton promo1;
 			 JButton promo2;
@@ -227,40 +321,30 @@ JFrame LoginFrame;
 			 JButton promo8;
 			 JButton promo9;
 			 JButton promo10;
-
+			 
+			 promo1 = new JButton("Promo-1");
+			 promo2 = new JButton("Promo-2");
+			 promo3 = new JButton("Promo-3");
+			 promo4 = new JButton("Promo-4");
+			 promo5 = new JButton("Promo-5");
+			 promo6 = new JButton("Promo-6");
+			 promo7 = new JButton("Promo-7");
+			 promo8 = new JButton("Promo-8");
+			 promo9 = new JButton("Promo-9");
+			 promo10 = new JButton("Promo-10");
+			 submit = new JButton("Submit");
 			
-			JPanel panel = new JPanel();
-			
-			promo1 = new JButton("Promo-1");
-			promo2 = new JButton("Promo-2");
-			promo3 = new JButton("Promo-3");
-			promo4 = new JButton("Promo-4");
-			promo5 = new JButton("Promo-5");
-			promo6 = new JButton("Promo-6");
-			promo7 = new JButton("Promo-7");
-			promo8 = new JButton("Promo-8");
-			promo9 = new JButton("Promo-9");
-			promo10 = new JButton("Promo-10");
-			submit = new JButton("Submit");
-			
-			promotionWindow.add(panel);
-			panel.add(promo1);
-			panel.add(promo2);
-			panel.add(promo3);
-			panel.add(promo4);
-			panel.add(promo5);
-			panel.add(promo6);
-			panel.add(promo7);
-			panel.add(promo8);
-			panel.add(promo9);
-			panel.add(promo10);
-			panel.add(submit);
-			
-			   promotionWindow.setVisible(true);
-			   promotionWindow.setSize(540,200);
-			   Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-			   promotionWindow.setLocation(dim.width/2-promotionWindow.getSize().width/2, dim.height/2-promotionWindow.getSize().height/2);
-				  
+			PromotionWindowPanel.add(promo1);
+			PromotionWindowPanel.add(promo2);
+			PromotionWindowPanel.add(promo3);
+			PromotionWindowPanel.add(promo4);
+			PromotionWindowPanel.add(promo5);
+			PromotionWindowPanel.add(promo6);
+			PromotionWindowPanel.add(promo7);
+			PromotionWindowPanel.add(promo8);
+			PromotionWindowPanel.add(promo9);
+			PromotionWindowPanel.add(promo10);
+			PromotionWindowPanel.add(submit);
 			   promo1.addActionListener(new ActionListener(){
 				   public void actionPerformed(ActionEvent e){
 					promotion1();   
@@ -320,9 +404,13 @@ JFrame LoginFrame;
 				   }
 					   });
 		}
+		public void startPromotionWindow()
+		{
+			 hidePanel(OptionWindowPanel);
+			 showPanel(PromotionWindowPanel);	 
+		}
 		public void promotion1(){
-			if(promotions.size()<5)
-			{
+			
 				if(promotions.indexOf(1) == -1)
 				{
 					promotions.add(1);	
@@ -331,15 +419,9 @@ JFrame LoginFrame;
 				{
 					JOptionPane.showMessageDialog(null, "Please choose another promotion");
 				}	
-			}
-			else
-			{
-				JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
-			}
 		}
 		public void promotion2(){
-			if(promotions.size()<5)
-			{
+			
 				if(promotions.indexOf(2) == -1)
 				{
 					promotions.add(2);	
@@ -348,15 +430,9 @@ JFrame LoginFrame;
 				{
 					JOptionPane.showMessageDialog(null, "Please choose another promotion");
 				}	
-			}
-			else
-			{
-				JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
-			}
 		}
 		public void promotion3(){
-			if(promotions.size()<5)
-			{
+			
 				if(promotions.indexOf(3) == -1)
 				{
 					promotions.add(3);	
@@ -365,15 +441,9 @@ JFrame LoginFrame;
 				{
 					JOptionPane.showMessageDialog(null, "Please choose another promotion");
 				}	
-			}
-			else
-			{
-				JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
-			}
 		}
 		public void promotion4(){
-			if(promotions.size()<5)
-			{
+			
 				if(promotions.indexOf(4) == -1)
 				{
 					promotions.add(4);	
@@ -382,15 +452,9 @@ JFrame LoginFrame;
 				{
 					JOptionPane.showMessageDialog(null, "Please choose another promotion");
 				}	
-			}
-			else
-			{
-				JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
-			}
 		}
 		public void promotion5(){
-			if(promotions.size()<5)
-			{
+			
 				if(promotions.indexOf(5) == -1)
 				{
 					promotions.add(5);	
@@ -399,15 +463,10 @@ JFrame LoginFrame;
 				{
 					JOptionPane.showMessageDialog(null, "Please choose another promotion");
 				}	
-			}
-			else
-			{
-				JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
-			}
+			
 		}
 		public void promotion6(){
-			if(promotions.size()<5)
-			{
+			
 				if(promotions.indexOf(6) == -1)
 				{
 					promotions.add(6);	
@@ -416,15 +475,10 @@ JFrame LoginFrame;
 				{
 					JOptionPane.showMessageDialog(null, "Please choose another promotion");
 				}	
-			}
-			else
-			{
-				JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
-			}
+			
 		}
 		public void promotion7(){
-			if(promotions.size()<5)
-			{
+			
 				if(promotions.indexOf(7) == -1)
 				{
 					promotions.add(7);	
@@ -433,15 +487,10 @@ JFrame LoginFrame;
 				{
 					JOptionPane.showMessageDialog(null, "Please choose another promotion");
 				}	
-			}
-			else
-			{
-				JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
-			}
+			
 		}
 		public void promotion8(){
-			if(promotions.size()<5)
-			{
+			
 				if(promotions.indexOf(8) == -1)
 				{
 					promotions.add(8);	
@@ -450,15 +499,9 @@ JFrame LoginFrame;
 				{
 					JOptionPane.showMessageDialog(null, "Please choose another promotion");
 				}	
-			}
-			else
-			{
-				JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
-			}
+			
 		}
 		public void promotion9(){
-			if(promotions.size()<5)
-			{
 				if(promotions.indexOf(9) == -1)
 				{
 					promotions.add(9);	
@@ -467,15 +510,9 @@ JFrame LoginFrame;
 				{
 					JOptionPane.showMessageDialog(null, "Please choose another promotion");
 				}	
-			}
-			else
-			{
-				JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
-			}
 		}
 		public void promotion10(){
-			if(promotions.size()<5)
-			{
+			
 				if(promotions.indexOf(10) == -1)
 				{
 					promotions.add(10);	
@@ -484,19 +521,14 @@ JFrame LoginFrame;
 				{
 					JOptionPane.showMessageDialog(null, "Please choose another promotion");
 				}	
-			}
-			else
-			{
-				JOptionPane.showMessageDialog(null,"You can only choose 5 promotions.");
-			}
+			
 		}
 		public void submitPromotions()
 		{
-			if(promotions.size()==5)
-			{
-				promotionWindow.setVisible(false);
+			hidePanel(PromotionWindowPanel);
+			startOptionWindow();
+			AtmWindow.setSize(400, 200);
 				JOptionPane.showMessageDialog(null, "Thank you for choosing the promotions. We will inform you once the promotions are online.");
-				startOptionWindow();
 			    int timeout_ms = 10000;//10 * 1000
 			    Timer timer = new Timer();
 
@@ -520,7 +552,7 @@ JFrame LoginFrame;
 						boolean promotionPresent = true;
 						while(promotionPresent)
 						{
-							int randomNum = randomNumber.nextInt(5)+1;
+							int randomNum = randomNumber.nextInt(10)+1;
 							if(promotions.indexOf(randomNum)!= -1)
 							{	
 								message += String.format("Customer Name: %s%nPromotion is available!%n",myCustomerName);
@@ -532,116 +564,19 @@ JFrame LoginFrame;
 					}
 
 			    }, timeout_ms);
-			}
-			else
-			{
-				JOptionPane.showMessageDialog(null, "Kindly choose 5 promotions");
-			}
 		}
-
-		public void startOptionWindow()
+		public void createDepositPanel()
 		{
-			OptionFrame = new JFrame(customerName);
-			 JButton balance;
-			 JButton deposit;
-			 JButton withdrawal;
-			 JButton exit;
-			 JButton statement;
-	
-		JPanel panel = new JPanel();
-		balance  = new JButton("Balance");
-		deposit = new JButton("Deposit");
-		withdrawal = new JButton("Withdrawal");
-		exit = new JButton("Exit");
-		statement = new JButton("Statement");
-		OptionFrame.add(panel);
-		OptionFrame.setSize(400,200);
-		OptionFrame.setVisible(true);
-		panel.add(balance);
-		panel.add(deposit);
-		panel.add(withdrawal);
-		panel.add(exit);
-		panel.add(statement);
-		GroupLayout layout = new GroupLayout(panel);
-		   panel.setLayout(layout);
-		  layout.setAutoCreateGaps(true);
-		  layout.setAutoCreateContainerGaps(true);
-		  
-		  GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
-		   hGroup.addGroup(layout.createParallelGroup().addComponent(balance).addComponent(deposit));
-		   hGroup.addGroup(layout.createParallelGroup().addComponent(withdrawal).addComponent(statement));
-		   hGroup.addGroup(layout.createParallelGroup().addComponent(exit));
-		   layout.setHorizontalGroup(hGroup);
-		   
-		   GroupLayout.ParallelGroup vGroup = layout.createParallelGroup();
-		  
-		   vGroup.addGroup(layout.createSequentialGroup().addComponent(balance).addComponent(deposit));
-		   vGroup.addGroup(layout.createSequentialGroup().addComponent(withdrawal).addComponent(statement));
-		   vGroup.addGroup(layout.createSequentialGroup().addComponent(exit));
-		   layout.setVerticalGroup(vGroup);
-		
-		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-		OptionFrame.setLocation(dim.width/2-OptionFrame.getSize().width/2, dim.height/2-OptionFrame.getSize().height/2);
-		
-			deposit.addActionListener(new ActionListener(){
-				public void actionPerformed(ActionEvent e){
-					deposit();
-				}
-			});
-			withdrawal.addActionListener(new ActionListener(){
-				public void actionPerformed(ActionEvent e)
-				{
-					 withdrawal();
-				}
-			});
-		balance.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e)
-			{
-				balance();
-			}
-		});
-		statement.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				statement();
-			}
-		});
-		exit.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-				Date date = new Date();
-				DateFormat time = new SimpleDateFormat("HH:mm:ss");
-				Calendar cal = Calendar.getInstance();
-				endTime = System.currentTimeMillis();
-				totalTime = endTime-startTime;
-				
-				long secs = TimeUnit.MILLISECONDS.toSeconds(totalTime);
-				threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Endtime: %s    %s  Total time: %d seconds %n",threadId,customerName,"Customer Logged out", dateFormat.format(date),time.format(cal.getTime()),secs);
-				String message = String.format("%s%n%s%n%n","Exiting the system...","Thank you! Goodbye!");
-				ATMCaseStudy.activeCustomers--;
-				LoginFrame.setVisible(false);
-				JOptionPane.showMessageDialog(null,message);
-				JOptionPane.showMessageDialog(null,threadMessage);
-				OptionFrame.setVisible(false);
-				passwordInput.setText("");
-				usernameInput.setText("");
-			}
-		});
-		}
-		public void deposit()
-		{
-			DepositFrame = new JFrame(customerName);
-			OptionFrame.setVisible(false);
 			JButton depositMoney = new JButton("Deposit");
 			depositInput = new JTextField();
 			depositInput.setText("");
-			JPanel panel = new JPanel();
-			DepositFrame.add(panel);
+			
 			JLabel label = new JLabel("Welcome");
 			JLabel label1 = new JLabel("Enter deposit amount in CENTS");
-			panel.add(depositMoney);
+			DepositWindowPanel.add(depositMoney);
 			depositInput.setToolTipText("Deposit amount");
-			GroupLayout layout = new GroupLayout(panel);
-			   panel.setLayout(layout);
+			GroupLayout layout = new GroupLayout(DepositWindowPanel);
+			   DepositWindowPanel.setLayout(layout);
 			  layout.setAutoCreateGaps(true);
 			  layout.setAutoCreateContainerGaps(true);
 			  
@@ -669,13 +604,11 @@ JFrame LoginFrame;
 						   depositMoney();
 					   }
 			   });
-
-			   DepositFrame.setVisible(true);
-			   DepositFrame.setSize(400,200);
-			   
-			   
-			   Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-			   DepositFrame.setLocation(dim.width/2-DepositFrame.getSize().width/2, dim.height/2-DepositFrame.getSize().height/2);
+		}
+		public void deposit()
+		{
+			hidePanel(OptionWindowPanel);
+			showPanel(DepositWindowPanel);
 		}
 		public void depositMoney()
 		{
@@ -686,9 +619,7 @@ JFrame LoginFrame;
 			if(depositAmount > 2000)
 			{
 				JOptionPane.showMessageDialog(null, "Sorry! I can't accept more than $2000");
-				DepositFrame.setVisible(false);
 				depositInput.setText("");
-				OptionFrame.setVisible(true);
 			}
 			else
 			{
@@ -718,9 +649,9 @@ JFrame LoginFrame;
 						message += String.format("%n%s%n%s%nTransaction type: Deposit%nTransaction amount: $%.2f%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),depositAmount,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber)-depositAmount,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
 								String localStatement = String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%.2f%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),depositAmount,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber)-depositAmount,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
 								data.add(localStatement);
-								DepositFrame.setVisible(false);
 								depositInput.setText("");
-								OptionFrame.setVisible(true);
+								hidePanel(DepositWindowPanel);
+								showPanel(OptionWindowPanel);
 				      } // end if
 				      else // deposit envelope not received
 				      {
@@ -733,9 +664,9 @@ JFrame LoginFrame;
 				   {
 					   String message = String.format("%s", "Canceling transaction...");
 				      JOptionPane.showMessageDialog(null,message );
-				      DepositFrame.setVisible(false);
 					  depositInput.setText("");
-					  OptionFrame.setVisible(true);
+					  hidePanel(DepositWindowPanel);
+					  showPanel(OptionWindowPanel);
 				   }
 			}
 
@@ -766,104 +697,94 @@ JFrame LoginFrame;
 				   } // end else
 			   }
 		}
-		public void withdrawal(){
-			WithdrawalFrame = new JFrame(customerName);
-			 JButton twenty;
-			 JButton fourty;
-			 JButton sixty;
-			 JButton hundred;
-			 JButton hundredTwenty;
-			 JButton cancel;
-
-			
-			JPanel panel = new JPanel();
-			WithdrawalFrame.add(panel);
-			
-			twenty = new JButton("Twenty");
-			fourty = new JButton("Fourty");
-			sixty = new JButton("Sixty");
-			hundred = new JButton("Hundred");
-			hundredTwenty = new JButton("Hundred Twenty");
-			cancel = new JButton("Cancel");
-			
-			panel.add(twenty);
-			panel.add(fourty);
-			panel.add(sixty);
-			panel.add(hundred);
-			panel.add(hundredTwenty);
-			panel.add(cancel);
-			
-			GroupLayout layout = new GroupLayout(panel);
-			   panel.setLayout(layout);
-			  layout.setAutoCreateGaps(true);
-			  layout.setAutoCreateContainerGaps(true);
-			  
-			  GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
-			   hGroup.addGroup(layout.createParallelGroup().addComponent(twenty).addComponent(fourty).addComponent(sixty));
-			   hGroup.addGroup(layout.createParallelGroup().addComponent(hundred).addComponent(hundredTwenty).addComponent(cancel));
-					   
-			   layout.setHorizontalGroup(hGroup);
-			   
-			   GroupLayout.ParallelGroup vGroup = layout.createParallelGroup();
-			  
-			   vGroup.addGroup(layout.createSequentialGroup().addComponent(twenty).addComponent(fourty).addComponent(sixty));
-			   vGroup.addGroup(layout.createSequentialGroup().addComponent(hundred).addComponent(hundredTwenty).addComponent(cancel));
-			   layout.setVerticalGroup(vGroup);
-			
-			   OptionFrame.setVisible(false);
-			   WithdrawalFrame.setVisible(true);
-			   WithdrawalFrame.setSize(400,200);
-			   
-			   Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-			   WithdrawalFrame.setLocation(dim.width/2-WithdrawalFrame.getSize().width/2, dim.height/2-WithdrawalFrame.getSize().height/2);
-			   
-			   twenty.addActionListener(new ActionListener(){
-				   public void actionPerformed(ActionEvent e){
-					   twenty();
-				   }
-			   });
-			   fourty.addActionListener(new ActionListener(){
-				   public void actionPerformed(ActionEvent e){
-					   fourty();
-				   }
-			   });
-			   sixty.addActionListener(new ActionListener(){
-				   public void actionPerformed(ActionEvent e){
-					   sixty();
-				   }
-			   });
-			   hundred.addActionListener(new ActionListener(){
-				   public void actionPerformed(ActionEvent e){
-					   hundred();
-				   }
-			   });
-			   hundredTwenty.addActionListener(new ActionListener(){
-				   public void actionPerformed(ActionEvent e){
-					   hundredTwenty();
-				   }
-			   });
-			   cancel.addActionListener(new ActionListener(){
-				   public void actionPerformed(ActionEvent e){
-					   cancel();
-				   }
-			   });
+	void createWithdrawalPanel()
+	{
+		JButton twenty;
+		 JButton fourty;
+		 JButton sixty;
+		 JButton hundred;
+		 JButton hundredTwenty;
+		 JButton cancel;
+		 
+		twenty = new JButton("Twenty");
+		fourty = new JButton("Fourty");
+		sixty = new JButton("Sixty");
+		hundred = new JButton("Hundred");
+		hundredTwenty = new JButton("Hundred Twenty");
+		cancel = new JButton("Cancel");
+		
+		WithdrawalWindowPanel.add(twenty);
+		WithdrawalWindowPanel.add(fourty);
+		WithdrawalWindowPanel.add(sixty);
+		WithdrawalWindowPanel.add(hundred);
+		WithdrawalWindowPanel.add(hundredTwenty);
+		WithdrawalWindowPanel.add(cancel);
+		GroupLayout layout = new GroupLayout(WithdrawalWindowPanel);
+		WithdrawalWindowPanel.setLayout(layout);
+		  layout.setAutoCreateGaps(true);
+		  layout.setAutoCreateContainerGaps(true);
+		  
+		  GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
+		   hGroup.addGroup(layout.createParallelGroup().addComponent(twenty).addComponent(fourty).addComponent(sixty));
+		   hGroup.addGroup(layout.createParallelGroup().addComponent(hundred).addComponent(hundredTwenty).addComponent(cancel));
+				   
+		   layout.setHorizontalGroup(hGroup);
+		   
+		   GroupLayout.ParallelGroup vGroup = layout.createParallelGroup();
+		  
+		   vGroup.addGroup(layout.createSequentialGroup().addComponent(twenty).addComponent(fourty).addComponent(sixty));
+		   vGroup.addGroup(layout.createSequentialGroup().addComponent(hundred).addComponent(hundredTwenty).addComponent(cancel));
+		   layout.setVerticalGroup(vGroup);
+		   twenty.addActionListener(new ActionListener(){
+			   public void actionPerformed(ActionEvent e){
+				   twenty();
+			   }
+		   });
+		   fourty.addActionListener(new ActionListener(){
+			   public void actionPerformed(ActionEvent e){
+				   fourty();
+			   }
+		   });
+		   sixty.addActionListener(new ActionListener(){
+			   public void actionPerformed(ActionEvent e){
+				   sixty();
+			   }
+		   });
+		   hundred.addActionListener(new ActionListener(){
+			   public void actionPerformed(ActionEvent e){
+				   hundred();
+			   }
+		   });
+		   hundredTwenty.addActionListener(new ActionListener(){
+			   public void actionPerformed(ActionEvent e){
+				   hundredTwenty();
+			   }
+		   });
+		   cancel.addActionListener(new ActionListener(){
+			   public void actionPerformed(ActionEvent e){
+				   cancel();
+			   }
+		   });
+	}
+		 public void withdrawal(){
+				hidePanel(OptionWindowPanel);
+				showPanel(WithdrawalWindowPanel);
 		}
 		public void cancel(){
 			withdrawalValue = 0;
 			execute(withdrawalValue);
-			WithdrawalFrame.setVisible(false);
-			OptionFrame.setVisible(true);
+			hidePanel(WithdrawalWindowPanel);
+			showPanel(OptionWindowPanel);
 		}
 		public void twenty(){
 			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 			Date date = new Date();
 			DateFormat time = new SimpleDateFormat("HH:mm:ss");
 			Calendar cal = Calendar.getInstance();
-
+			hidePanel(WithdrawalWindowPanel);
+			showPanel(WithdrawalWindowPanel);
 			withdrawalValue = 20;
 			execute(withdrawalValue);
-			WithdrawalFrame.setVisible(false);
-			OptionFrame.setVisible(true);
 			Transaction foo = new BalanceInquiry(currentAccountNumber,bankDatabase);
 			threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s    %s %n",threadId,customerName,"Withdrawal", dateFormat.format(date),time.format(cal.getTime()));
 			message += String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
@@ -875,11 +796,10 @@ JFrame LoginFrame;
 			Date date = new Date();
 			DateFormat time = new SimpleDateFormat("HH:mm:ss");
 			Calendar cal = Calendar.getInstance();
-
+			hidePanel(WithdrawalWindowPanel);
+			showPanel(WithdrawalWindowPanel);
 			withdrawalValue = 40;
 			execute(withdrawalValue);
-			WithdrawalFrame.setVisible(false);
-			OptionFrame.setVisible(true);
 			Transaction foo = new BalanceInquiry(currentAccountNumber,bankDatabase);
 			threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s    %s %n",threadId,customerName,"Withdrawal", dateFormat.format(date),time.format(cal.getTime()));
 			message += String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
@@ -891,11 +811,10 @@ JFrame LoginFrame;
 			Date date = new Date();
 			DateFormat time = new SimpleDateFormat("HH:mm:ss");
 			Calendar cal = Calendar.getInstance();
-
+			hidePanel(WithdrawalWindowPanel);
+			showPanel(WithdrawalWindowPanel);
 			withdrawalValue = 60;
 			execute(withdrawalValue);
-			WithdrawalFrame.setVisible(false);
-			OptionFrame.setVisible(true);
 			Transaction foo = new BalanceInquiry(currentAccountNumber,bankDatabase);
 			threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s    %s %n",threadId,customerName,"Withdrawal", dateFormat.format(date),time.format(cal.getTime()));
 	 		message += String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
@@ -907,11 +826,10 @@ JFrame LoginFrame;
 			Date date = new Date();
 			DateFormat time = new SimpleDateFormat("HH:mm:ss");
 			Calendar cal = Calendar.getInstance();
-
+			hidePanel(WithdrawalWindowPanel);
+			showPanel(WithdrawalWindowPanel);
 			withdrawalValue = 100;
 			execute(withdrawalValue);
-			WithdrawalFrame.setVisible(false);
-			OptionFrame.setVisible(true);
 			Transaction foo = new BalanceInquiry(currentAccountNumber,bankDatabase);
 			threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s    %s %n",threadId,customerName,"Withdrawal", dateFormat.format(date),time.format(cal.getTime()));
 	 		message += String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
@@ -923,11 +841,10 @@ JFrame LoginFrame;
 			Date date = new Date();
 			DateFormat time = new SimpleDateFormat("HH:mm:ss");
 			Calendar cal = Calendar.getInstance();
-
+			hidePanel(WithdrawalWindowPanel);
+			showPanel(WithdrawalWindowPanel);
 			withdrawalValue = 120;
 			execute(withdrawalValue);
-			WithdrawalFrame.setVisible(false);
-			OptionFrame.setVisible(true);
 			Transaction foo = new BalanceInquiry(currentAccountNumber,bankDatabase);
 			threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s    %s %n",threadId,customerName,"Withdrawal", dateFormat.format(date),time.format(cal.getTime()));
 	 		message += String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
@@ -948,24 +865,16 @@ JFrame LoginFrame;
 			Transaction transaction = new BalanceInquiry(currentAccountNumber,bankDatabase);
 			transaction.execute();
 		}
-		public void statement(){
-			statementFrame = new JFrame(customerName);
+		void createStatementPanel()
+		{
+
 			 JButton completeStatement;
 			 JButton dateStatement;
 
-			JPanel panel = new JPanel();
 			completeStatement = new JButton("Complete Statement");
 			dateStatement = new JButton("Select Dates");
-			statementFrame.add(panel);
-			panel.add(completeStatement);
-			panel.add(dateStatement);
-			OptionFrame.setVisible(false);
-			
-			statementFrame.setVisible(true);
-			statementFrame.setSize(400, 200);
-			
-			Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-			statementFrame.setLocation(dim.width/2-statementFrame.getSize().width/2, dim.height/2-statementFrame.getSize().height/2);
+			StatementWindowPanel.add(completeStatement);
+			StatementWindowPanel.add(dateStatement);
 			
 			completeStatement.addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent e){
@@ -978,6 +887,10 @@ JFrame LoginFrame;
 					statementBetweenDates();
 				}
 			});
+		}
+		public void statement(){
+			hidePanel(OptionWindowPanel);
+			showPanel(StatementWindowPanel);	
 		}
 		public void completeStatement(){
 			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -993,27 +906,26 @@ JFrame LoginFrame;
 			{
 				JOptionPane.showMessageDialog(null,message);	
 			}
-			statementFrame.setVisible(false);
-			OptionFrame.setVisible(true);
+			hidePanel(StatementWindowPanel);
+			showPanel(OptionWindowPanel);
 		}
-		public void init()
+		
+		void createModifiedPanel()
 		{
-			 modifiedStatement = new JFrame(customerName);
-			JPanel panel = new JPanel();
 			JLabel label1 = new JLabel("Start Date");
 			startDate = new JTextField();
 			JLabel label2 = new JLabel("End Date");
 			endDate = new JTextField();
 			
 			JButton generateStatement = new JButton("Generate");
-			modifiedStatement.add(panel);
-			panel.add(generateStatement);
-			panel.add(label1);
-			panel.add(startDate);
-			panel.add(label2);
-			panel.add(endDate);
-			GroupLayout layout = new GroupLayout(panel);
-			   panel.setLayout(layout);
+
+			ModifiedWindowPanel.add(generateStatement);
+			ModifiedWindowPanel.add(label1);
+			ModifiedWindowPanel.add(startDate);
+			ModifiedWindowPanel.add(label2);
+			ModifiedWindowPanel.add(endDate);
+			GroupLayout layout = new GroupLayout(ModifiedWindowPanel);
+			   ModifiedWindowPanel.setLayout(layout);
 
 			   layout.setAutoCreateGaps(true);
 			   layout.setAutoCreateContainerGaps(true);
@@ -1036,20 +948,11 @@ JFrame LoginFrame;
 			   vGroup.addGroup(layout.createParallelGroup(Alignment.CENTER).addComponent(generateStatement));
 			   layout.setVerticalGroup(vGroup);
 			  
-			   JOptionPane.showMessageDialog(null,"Enter date in the format: dd/MM/yyyy");
-			   statementFrame.setVisible(false);
-			   modifiedStatement.setVisible(true);
-			   modifiedStatement.setSize(400,200);
-			   
 				DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 				Date date = new Date();
 				DateFormat time = new SimpleDateFormat("HH:mm:ss");
 				Calendar cal = Calendar.getInstance();
 				threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s    %s %n",threadId,customerName,"Viewed statement", dateFormat.format(date),time.format(cal.getTime()));
-
-
-				Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-				modifiedStatement.setLocation(dim.width/2-modifiedStatement.getSize().width/2, dim.height/2-modifiedStatement.getSize().height/2);
 				generateStatement.addActionListener(new ActionListener(){
 				   public void actionPerformed(ActionEvent e){
 					   statementGeneration();
@@ -1103,8 +1006,6 @@ JFrame LoginFrame;
 		            {
 		            	String message = String.format("%s%n%n%s", "Insufficient cash available in the ","Please choose a smaller amount.");
 		                JOptionPane.showMessageDialog(null,message);
-		                WithdrawalFrame.setVisible(false);
-		                OptionFrame.setVisible(true);
 		            }
 		            	
 		         } // end if
@@ -1168,18 +1069,15 @@ JFrame LoginFrame;
 				   accountInformation+= statementMessage;
 			   	   JOptionPane.showMessageDialog(null, accountInformation);
 			   }
-			   modifiedStatement.setVisible(false);
-			   OptionFrame.setVisible(true);
+			   hidePanel(ModifiedWindowPanel);
+			   showPanel(OptionWindowPanel);
 			   startDate.setText("");
 			   endDate.setText("");
 			   statementMessage = "";
 		}
 		public void statementBetweenDates(){
-			if(!initCompleted)
-			{
-				init();
-				initCompleted = true;	
-			}
-			modifiedStatement.setVisible(true);
+			JOptionPane.showMessageDialog(null,"Enter date in the format: dd/MM/yyyy");
+			hidePanel(StatementWindowPanel);
+			showPanel(ModifiedWindowPanel);
 		}
 	}
