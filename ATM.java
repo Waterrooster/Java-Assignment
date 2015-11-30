@@ -48,6 +48,13 @@ public class ATM implements Runnable
 	JPanel ModifiedWindowPanel = new JPanel();
 	JPanel CreateCustomerPanel = new JPanel();
 	
+	JTextField customerFirstNameInput;
+	JTextField customerLastNameInput ;
+	JTextField customerAccountNumberInput;
+	JPasswordField customerPinInput ;
+	JPasswordField customerPinVerificationInput;
+	JTextField customerBalanceInput;
+	
 	int withdrawalValue;
 	JTextField startDate;
 	JTextField endDate;
@@ -232,12 +239,12 @@ public void showPanel(JPanel panelName)
 		JLabel customerPinVerification = new JLabel("Verify Pin");
 		JLabel customerDepositBalance = new JLabel("Deposit Amount");
 	
-		JTextField customerFirstNameInput = new JTextField();
-		JTextField customerLastNameInput = new JTextField();
-		JTextField customerAccountNumberInput = new JTextField();
-		JPasswordField customerPinInput = new JPasswordField();
-		JPasswordField customerPinVerificationInput = new JPasswordField();
-		JTextField customerBalanceInput = new JTextField();
+		 customerFirstNameInput = new JTextField();
+		 customerLastNameInput = new JTextField();
+		 customerAccountNumberInput = new JTextField();
+		 customerPinInput = new JPasswordField();
+		 customerPinVerificationInput = new JPasswordField();
+		 customerBalanceInput = new JTextField();
 		
 		JButton createCustomerButton = new JButton("Create");
 				
@@ -285,7 +292,28 @@ public void showPanel(JPanel panelName)
 		   vGroup.addGroup(layout.createParallelGroup().addComponent(createCustomerButton));
 		   layout.setVerticalGroup(vGroup);
 		   
+		   createCustomerButton.addActionListener(new ActionListener(){
+			   public void actionPerformed(ActionEvent e)
+			   {
+				   createCustomerExecute();
+			   }
+		   });
+		   
 	}
+  void createCustomerExecute()
+  {
+	 String custoFirstName = customerFirstNameInput.getText();
+	 String custoLastName = customerLastNameInput.getText();
+	 int custoAccountNumber = Integer.parseInt(customerAccountNumberInput.getText());
+	 int custoPin = Integer.parseInt(customerPinInput.getText());
+	 double custoBalance = Double.parseDouble(customerBalanceInput.getText());
+	
+	 Account acc = new Account(custoAccountNumber,custoPin,custoBalance, custoBalance,custoFirstName,custoLastName);
+	 bankDatabase.addAccount(acc);
+	 hidePanel(CreateCustomerPanel);
+	 AtmWindow.setSize(400,200);
+	 showPanel(LoginPanel);
+  }
   void createOptionPanel()
 	{
 		 JButton balance;
