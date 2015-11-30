@@ -13,6 +13,11 @@ import java.util.Calendar;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Date;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -21,6 +26,8 @@ import java.util.Timer;
 import java.util.Random;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ATM implements Runnable
 {
@@ -39,6 +46,7 @@ public class ATM implements Runnable
 	JPanel WithdrawalWindowPanel = new JPanel();
 	JPanel StatementWindowPanel	= new JPanel();
 	JPanel ModifiedWindowPanel = new JPanel();
+	JPanel CreateCustomerPanel = new JPanel();
 	
 	int withdrawalValue;
 	JTextField startDate;
@@ -80,6 +88,7 @@ public void setThreadId(long id) {
 		createPromotionPanel();
 		createDepositPanel();
 		createWithdrawalPanel();
+		createNewCustomerPanel();
 	}
 
 	
@@ -120,6 +129,8 @@ public void showPanel(JPanel panelName)
 	JLabel label = new JLabel("Welcome");
 		JLabel label1 = new JLabel("Account number");
 		JLabel label2 = new JLabel("Password");
+		JButton createCustomer = new JButton("Create Customer");
+		
 		usernameInput = new JTextField();
 		passwordInput = new JPasswordField();
 		verify = new JButton("Verify");
@@ -135,10 +146,9 @@ public void showPanel(JPanel panelName)
 		   hGroup.addGroup(layout.createParallelGroup().
 				   addComponent(label));
 		   hGroup.addGroup(layout.createParallelGroup().
-		            addComponent(label1).addComponent(label2));
+		            addComponent(label1).addComponent(label2).addComponent(createCustomer));
 		   hGroup.addGroup(layout.createParallelGroup().
-		            addComponent(usernameInput).addComponent(passwordInput));
-		   hGroup.addGroup(layout.createParallelGroup().addComponent(verify));
+		            addComponent(usernameInput).addComponent(passwordInput).addComponent(verify));
 		   layout.setHorizontalGroup(hGroup);
 		   
 		   
@@ -149,9 +159,15 @@ public void showPanel(JPanel panelName)
 		            addComponent(label1).addComponent(usernameInput));
 		   vGroup.addGroup(layout.createParallelGroup(Alignment.BASELINE).
 				   addComponent(label2).addComponent(passwordInput));
-		   vGroup.addGroup(layout.createParallelGroup(Alignment.CENTER).addComponent(verify));
+		   vGroup.addGroup(layout.createParallelGroup(Alignment.CENTER).addComponent(createCustomer).addComponent(verify));
 		   layout.setVerticalGroup(vGroup);
 		   
+		   createCustomer.addActionListener(new ActionListener(){
+			   public void actionPerformed(ActionEvent e)
+			   {
+				   createCustomerPanel();
+			   }
+		   });
 		   verify.addActionListener(new ActionListener() {
 			   public void actionPerformed(ActionEvent e) {
 				   authenticate();
@@ -181,6 +197,15 @@ public void showPanel(JPanel panelName)
 					startOptionWindow();
 					AtmWindow.setTitle(customerName);
 					atmObject.addCustomer(customerName);
+					String weather = getWeather();
+					Pattern p = Pattern.compile(".*description\\\":\\\"([^\\\"]+).*");
+					Matcher m = p.matcher(weather);
+					String weatherDescription = "";
+					if (m.matches()) {
+						weatherDescription = m.group(1);
+					}
+					JOptionPane.showMessageDialog(null,weatherDescription);
+
 					}
 			   else
 			   {
@@ -191,6 +216,75 @@ public void showPanel(JPanel panelName)
 		}catch(Exception error){
 			JOptionPane.showMessageDialog(null,"Please provide valid account details");
 		}
+	}
+	public void createCustomerPanel()
+	{
+		AtmWindow.setSize(400, 270);
+		hidePanel(LoginPanel);
+		showPanel(CreateCustomerPanel);
+	}
+  void createNewCustomerPanel()
+	{
+		JLabel customerFirstNameLabel = new JLabel("First Name");
+		JLabel customerLastNameLabel = new JLabel("Last Name");
+		JLabel customerAccountNumber = new JLabel("Account Number");
+		JLabel customerPinNumber = new JLabel("Login Pin");
+		JLabel customerPinVerification = new JLabel("Verify Pin");
+		JLabel customerDepositBalance = new JLabel("Deposit Amount");
+	
+		JTextField customerFirstNameInput = new JTextField();
+		JTextField customerLastNameInput = new JTextField();
+		JTextField customerAccountNumberInput = new JTextField();
+		JPasswordField customerPinInput = new JPasswordField();
+		JPasswordField customerPinVerificationInput = new JPasswordField();
+		JTextField customerBalanceInput = new JTextField();
+		
+		JButton createCustomerButton = new JButton("Create");
+				
+		CreateCustomerPanel.add(customerFirstNameLabel);
+		CreateCustomerPanel.add(customerLastNameLabel);
+		CreateCustomerPanel.add(customerAccountNumber);
+		CreateCustomerPanel.add(customerPinNumber);
+		CreateCustomerPanel.add(customerPinVerification);
+		CreateCustomerPanel.add(customerDepositBalance);
+		
+		CreateCustomerPanel.add(customerFirstNameInput);
+		CreateCustomerPanel.add(customerLastNameInput);
+		CreateCustomerPanel.add(customerAccountNumberInput);
+		CreateCustomerPanel.add(customerPinInput);
+		CreateCustomerPanel.add(customerPinVerificationInput);
+		CreateCustomerPanel.add(customerBalanceInput);
+		CreateCustomerPanel.add(createCustomerButton);
+		
+		GroupLayout layout = new GroupLayout(CreateCustomerPanel);
+		CreateCustomerPanel.setLayout(layout);
+		   
+		   layout.setAutoCreateGaps(true);
+		   
+		   layout.setAutoCreateContainerGaps(true);
+		   GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
+		   hGroup.addGroup(layout.createParallelGroup().addComponent(customerFirstNameLabel).addComponent(customerLastNameLabel).addComponent(customerAccountNumber).addComponent(customerAccountNumber).addComponent(customerPinNumber).addComponent(customerPinVerification).addComponent(customerDepositBalance));
+		   hGroup.addGroup(layout.createParallelGroup().addComponent(customerFirstNameInput).addComponent(customerLastNameInput).addComponent(customerAccountNumberInput).addComponent(customerPinInput).addComponent(customerPinVerificationInput).addComponent(customerBalanceInput).addComponent(createCustomerButton));
+		   layout.setHorizontalGroup(hGroup);
+		   
+		   
+		   GroupLayout.SequentialGroup vGroup = layout.createSequentialGroup();
+		   
+		   vGroup.addGroup(layout.createParallelGroup().
+		            addComponent(customerFirstNameLabel).addComponent(customerFirstNameInput));
+		   vGroup.addGroup(layout.createParallelGroup().
+				   addComponent(customerLastNameLabel).addComponent(customerLastNameInput));
+		   vGroup.addGroup(layout.createParallelGroup().
+				   addComponent(customerAccountNumber).addComponent(customerAccountNumberInput));
+		   vGroup.addGroup(layout.createParallelGroup().
+				   addComponent(customerPinNumber).addComponent(customerPinInput));
+		   vGroup.addGroup(layout.createParallelGroup().
+				   addComponent(customerPinVerification).addComponent(customerPinVerificationInput));
+		   vGroup.addGroup(layout.createParallelGroup().
+				   addComponent(customerDepositBalance).addComponent(customerBalanceInput));		   
+		   vGroup.addGroup(layout.createParallelGroup().addComponent(createCustomerButton));
+		   layout.setVerticalGroup(vGroup);
+		   
 	}
   void createOptionPanel()
 	{
@@ -408,7 +502,6 @@ public void showPanel(JPanel panelName)
 		{
 			 hidePanel(OptionWindowPanel);
 			 showPanel(PromotionWindowPanel);	 
-<<<<<<< HEAD
 		}
 		void promotion(int promoNumber)
 		{
@@ -421,122 +514,6 @@ public void showPanel(JPanel panelName)
 			{
 				JOptionPane.showMessageDialog(null, "Please choose another promotion");	
 			}
-=======
-		}
-		public void promotion1(){
-			
-				if(promotions.indexOf(1) == -1)
-				{
-					promotions.add(1);	
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null, "Please choose another promotion");
-				}	
-		}
-		public void promotion2(){
-			
-				if(promotions.indexOf(2) == -1)
-				{
-					promotions.add(2);	
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null, "Please choose another promotion");
-				}	
-		}
-		public void promotion3(){
-			
-				if(promotions.indexOf(3) == -1)
-				{
-					promotions.add(3);	
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null, "Please choose another promotion");
-				}	
-		}
-		public void promotion4(){
-			
-				if(promotions.indexOf(4) == -1)
-				{
-					promotions.add(4);	
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null, "Please choose another promotion");
-				}	
-		}
-		public void promotion5(){
-			
-				if(promotions.indexOf(5) == -1)
-				{
-					promotions.add(5);	
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null, "Please choose another promotion");
-				}	
-			
-		}
-		public void promotion6(){
-			
-				if(promotions.indexOf(6) == -1)
-				{
-					promotions.add(6);	
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null, "Please choose another promotion");
-				}	
-			
-		}
-		public void promotion7(){
-			
-				if(promotions.indexOf(7) == -1)
-				{
-					promotions.add(7);	
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null, "Please choose another promotion");
-				}	
-			
-		}
-		public void promotion8(){
-			
-				if(promotions.indexOf(8) == -1)
-				{
-					promotions.add(8);	
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null, "Please choose another promotion");
-				}	
-			
-		}
-		public void promotion9(){
-				if(promotions.indexOf(9) == -1)
-				{
-					promotions.add(9);	
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null, "Please choose another promotion");
-				}	
-		}
-		public void promotion10(){
-			
-				if(promotions.indexOf(10) == -1)
-				{
-					promotions.add(10);	
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null, "Please choose another promotion");
-				}	
-			
->>>>>>> c0ada9388304f8aa43a0374f1ffede321b671326
 		}
 		public void submitPromotions()
 		{
@@ -1094,5 +1071,42 @@ public void showPanel(JPanel panelName)
 			JOptionPane.showMessageDialog(null,"Enter date in the format: dd/MM/yyyy");
 			hidePanel(StatementWindowPanel);
 			showPanel(ModifiedWindowPanel);
+		}
+		
+		public String doHttpGet(String url) {
+			try {
+				return httpGet(url);
+			} catch(IOException e) {
+				return "";
+			}
+		}
+		
+		public  String httpGet(String urlStr) throws IOException {
+			  URL url = new URL(urlStr);
+			  HttpURLConnection conn =
+			      (HttpURLConnection) url.openConnection();
+
+			  if (conn.getResponseCode() != 200) {
+			    throw new IOException(conn.getResponseMessage());
+			  }
+
+			  // Buffer the result into a string
+			  BufferedReader rd = new BufferedReader(
+			      new InputStreamReader(conn.getInputStream()));
+			  StringBuilder sb = new StringBuilder();
+			  String line;
+			  while ((line = rd.readLine()) != null) {
+			    sb.append(line);
+			  }
+			  rd.close();
+
+			  conn.disconnect();
+			  return sb.toString();
+			}
+		
+		public String getWeather() {
+			String url = "http://api.openweathermap.org/data/2.5/weather?q=Melbourne,USA;&APPID=5dc7d6a8515808735afe5fd3f01c0586";
+			String response = doHttpGet(url);
+			return response;
 		}
 	}

@@ -5,21 +5,21 @@ import java.util.ArrayList;
 
 public class BankDatabase
 {
-protected Account accounts[]; // array of Accounts
+protected ArrayList<Account> accounts; // array of Accounts
 // no-argument BankDatabase constructor initializes accounts
 public BankDatabase()
 {
-   accounts = new Account[ 10 ]; // just 2 accounts for testing
-   accounts[0] = new Account(11111, 11111, 1000.0, 1200.0,"Kevin","Spacey");
-   accounts[1] = new Account( 22222, 22222, 200.0, 1200.0,"Sheryl","Brain");  
-   accounts[2] = new Account(33333,33333,5493.00,6000.00,"Darth","Vader");
-   accounts[3] = new Account(44444,44444,900.00,1502.00,"Han","Solo");
-   accounts[4] = new Account(55555,55555,1000.00,3000.00,"Peter","Mayhew");
-   accounts[5] = new Account(66666,66666,1002.00,1400.00,"Clairie","Underwood");
-   accounts[6] = new Account(77777,77777,500.00,1400.00,"Doug","Stamper");
-   accounts[7] = new Account(88888,88888,700.00,1400.00,"Garret","Walker");
-   accounts[8] = new Account(99999,99999,600.00,1500.00,"Linda","Vasquez");
-   accounts[9] = new Account(12345,54321,700.00,1500.00,"Gillian","Cole");
+   accounts = new ArrayList<Account>(); // just 2 accounts for testing
+   accounts.add(new Account(11111, 11111, 1000.0, 1200.0,"Kevin","Spacey"));
+   accounts.add(new Account( 22222, 22222, 200.0, 1200.0,"Sheryl","Brain"));  
+   accounts.add(new Account(33333,33333,5493.00,6000.00,"Darth","Vader"));
+   accounts.add(new Account(44444,44444,900.00,1502.00,"Han","Solo"));
+   accounts.add(new Account(55555,55555,1000.00,3000.00,"Peter","Mayhew"));
+   accounts.add(new Account(66666,66666,1002.00,1400.00,"Clairie","Underwood"));
+   accounts.add(new Account(77777,77777,500.00,1400.00,"Doug","Stamper"));
+   accounts.add(new Account(88888,88888,700.00,1400.00,"Garret","Walker"));
+   accounts.add(new Account(99999,99999,600.00,1500.00,"Linda","Vasquez"));
+   accounts.add(new Account(12345,54321,700.00,1500.00,"Gillian","Cole"));
    
    ArrayList<String> bankersDetails = new ArrayList<>();
    for(Account a : accounts)
@@ -101,4 +101,9 @@ public void debit( int userAccountNumber, double amount )
 {
    getAccount( userAccountNumber ).debit( amount );
 } // end method debit
+
+public void addAccount(Account account) {
+	accounts.add(account);
+}
+
 } // end class BankDatabase
