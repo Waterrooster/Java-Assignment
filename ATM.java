@@ -19,6 +19,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
+import java.util.List;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -39,6 +40,8 @@ public class ATM implements Runnable
 	String message = "";
 	 String customerName;
 	JFrame AtmWindow = new JFrame(customerName);
+	
+	List<Thread> threads = new ArrayList<>();
 	
 	JPanel LoginPanel = new JPanel();
 	JPanel OptionWindowPanel = new JPanel();
@@ -81,9 +84,9 @@ public class ATM implements Runnable
 	 
 	 String createCustomerErrorMessage = "";
 	 
-public void setThreadId(long id) {
-	threadId = id;
-}
+//public void setThreadId(long id) {
+//	threadId = id;
+//}
 
 	public ATM(ATMCaseStudy atmObject) {
 		this.atmObject = atmObject;
@@ -132,6 +135,17 @@ public void showPanel(JPanel panelName)
 	AtmWindow.getContentPane().add(panelName);
 	AtmWindow.revalidate();
 	AtmWindow.repaint();
+}
+public void newCustomer()
+{
+	AtmWindow.getContentPane().removeAll();
+	AtmWindow.revalidate();
+	AtmWindow.repaint();
+	usernameInput.setText("");
+	passwordInput.setText("");
+	AtmWindow.setTitle("");
+	showPanel(LoginPanel);
+	atmObject.customerList.setSelectedItem("New customer");
 }
  void createLoginPanel()
 {
@@ -202,12 +216,17 @@ public void showPanel(JPanel panelName)
 					Calendar cal = Calendar.getInstance();
 					currentAccountNumber = accountNumber;
 					customerName = bankDatabase.getName(currentAccountNumber);
+					
+					Thread thread = new Thread(customerName);
+					threads.add(thread);
+					thread.run();
+					threadId = thread.getId();
 					threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s    %s %n",threadId,customerName,"Customer Login", dateFormat.format(date),time.format(cal.getTime()));
 					startTime = cal.getTimeInMillis();
 					startOptionWindow();
 					AtmWindow.setTitle(customerName);
 					atmObject.addCustomer(customerName);
-								
+					atmObject.customerList.setSelectedItem(customerName);
 					
 					JSONObject obj = new JSONObject(getWeather());
 					String weatherDescription = "";
@@ -579,7 +598,6 @@ public void showPanel(JPanel panelName)
 			long secs = TimeUnit.MILLISECONDS.toSeconds(totalTime);
 			threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Endtime: %s    %s  Total time: %d seconds %n",threadId,customerName,"Customer Logged out", dateFormat.format(date),time.format(cal.getTime()),secs);
 			String message = String.format("%s%n%s%n%n","Exiting the system...","Thank you! Goodbye!");
-			ATMCaseStudy.activeCustomers--;
 			JOptionPane.showMessageDialog(null,message);
 			JOptionPane.showMessageDialog(null,threadMessage);
 			atmObject.customerList.removeItem(customerName);

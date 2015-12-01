@@ -7,15 +7,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.*;
 
 
 public class ATMCaseStudy
 {
-	List<Thread> threads = new ArrayList<>();
-	static int activeCustomers = 0;
 	ATM atm= new ATM(this);
 	JComboBox<String> customerList;
 	public void run()
@@ -24,9 +21,9 @@ public class ATMCaseStudy
 		JPanel customerSetupWindowPanel = new JPanel();
 		JButton spawnCustomer = new JButton("Spawn new customer");
 		JButton showActivity = new JButton("Show Customer Activity");
-		JButton activeCustomerInfo = new JButton("Active Customers");
 		JButton exit = new JButton("Exit");
 		customerList = new JComboBox<String>();
+		customerList.addItem("New customer");
 		customerList.addItemListener(new ItemListener() {
 			
 			@Override
@@ -34,14 +31,21 @@ public class ATMCaseStudy
 		        int state = e.getStateChange();
 		        if(state == ItemEvent.SELECTED) {
 			        String customerName = (String) e.getItem();
-		        	atm.setCustomer(customerName);
+		        	if(customerName == "New customer")
+		        	{
+		        		atm.newCustomer();
+		        	}
+		        	else
+		        	{
+		        		atm.setCustomer(customerName);
+		        	}
 		        }
 			}
 		});
+		
 		customerSetupWindow.add(customerSetupWindowPanel);
 		customerSetupWindowPanel.add(spawnCustomer);
 		customerSetupWindowPanel.add(showActivity);
-		customerSetupWindowPanel.add(activeCustomerInfo);
 		customerSetupWindowPanel.add(customerList);
 		customerSetupWindowPanel.add(exit);
 
@@ -65,17 +69,10 @@ public class ATMCaseStudy
 				showThreadInfo();
 			}
 		});
-		activeCustomerInfo.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e)
-			{
-				activeCustomerInfo();
-			}
-		});
 	}
 	
 	
 	ArrayList<String> customerLst = new ArrayList<>();
-	
 	
 	public void addCustomer(String customerName) {
 		if(!customerLst.contains(customerName))
@@ -84,23 +81,16 @@ public class ATMCaseStudy
 			customerLst.add(customerName);
 		}		
 	}
-	
 	public void spawnCustomer()
 	{
-		if(activeCustomers<=10)
+		if(customerList.getItemCount()<=11)
 		{
-			activeCustomers++;
 			atm.showLoginWindow();
-			Thread thread = new Thread(atm);
-			atm.setThreadId(thread.getId());
-			threads.add(thread);
-			thread.run();
 		}
 		else
 		{
 			JOptionPane.showMessageDialog(null, "Bank is currently having 10 customers.Kindly wait until there's space available.");
 		}
-		
 	}
 	public void showThreadInfo()
 	{
