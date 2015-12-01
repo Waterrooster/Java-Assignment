@@ -7,14 +7,17 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.*;
-
 
 public class ATMCaseStudy
 {
 	ATM atm= new ATM(this);
 	JComboBox<String> customerList;
+	List<Thread> threads = new ArrayList<>();
+	List<String> customerThreadList = new ArrayList<>();
+	Thread thread;
 	public void run()
 	{		
 		JFrame customerSetupWindow = new JFrame("Spawn customer window.");

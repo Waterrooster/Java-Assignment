@@ -11,6 +11,7 @@ protected double availableBalance; // funds available for withdrawal
 protected double totalBalance; // funds available + pending deposits
 protected String firstName;
 protected String lastName;
+long threadID=0;
 // Account constructor initializes attributes
 public Account(int theAccountNumber)
 {
@@ -71,6 +72,15 @@ public void debit( double amount )
    totalBalance -= amount; // subtract from total balance
 } // end method debit
 
+public void setThreadID(int accountNumber,long threadId)
+{
+	threadID = threadId;
+}
+
+public long getThreadId(int accountNumber)
+{
+	return threadID;
+}
 // returns account number
 public int getAccountNumber()
 {
