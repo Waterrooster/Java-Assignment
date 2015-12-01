@@ -221,9 +221,6 @@ public void showPanel(JPanel panelName)
 					
 					String weatherMessage = String.format("Hi! %s.%nCurrent weather description: %s%nTemperature: %.2f F%n", customerName,weatherDescription,currentTemp);
 					JOptionPane.showMessageDialog(null,weatherMessage);
-					
-					
-					atmObject.customerList.setSelectedItem(customerName);
 					}
 			   else
 			   {
@@ -578,14 +575,18 @@ public void showPanel(JPanel panelName)
 			Calendar cal = Calendar.getInstance();
 			endTime = System.currentTimeMillis();
 			totalTime = endTime-startTime;
-			atmObject.customerList.removeItem(customerName);
+			
 			long secs = TimeUnit.MILLISECONDS.toSeconds(totalTime);
 			threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Endtime: %s    %s  Total time: %d seconds %n",threadId,customerName,"Customer Logged out", dateFormat.format(date),time.format(cal.getTime()),secs);
 			String message = String.format("%s%n%s%n%n","Exiting the system...","Thank you! Goodbye!");
 			ATMCaseStudy.activeCustomers--;
 			JOptionPane.showMessageDialog(null,message);
 			JOptionPane.showMessageDialog(null,threadMessage);
+			atmObject.customerList.removeItem(customerName);
 			hidePanel(OptionWindowPanel);
+			usernameInput.setText("");
+			passwordInput.setText("");
+			AtmWindow.setTitle("");
 			showPanel(LoginPanel);
 		}
 	});
@@ -1056,7 +1057,7 @@ public void showPanel(JPanel panelName)
 			DateFormat time = new SimpleDateFormat("HH:mm:ss");
 			Calendar cal = Calendar.getInstance();
 
-			threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s    %s %n",threadId,customerName,"Withdrawal", dateFormat.format(date),time.format(cal.getTime()));
+			threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s    %s %n",threadId,customerName,"Balance Inquiry", dateFormat.format(date),time.format(cal.getTime()));
 			Transaction transaction = new BalanceInquiry(currentAccountNumber,bankDatabase);
 			transaction.execute();
 		}
@@ -1309,7 +1310,7 @@ public void showPanel(JPanel panelName)
 			}
 		
 		public String getWeather() {
-			String url = "http://api.openweathermap.org/data/2.5/weather?q=Melbourne,USA;&APPID=1dbadfb1be375be9be48b12c00e4ca59";
+			String url = "http://api.openweathermap.org/data/2.5/weather?q=Melbourne,USA;&APPID=22821222dfe57cf93b24637ae2a85367";
 			String response = doHttpGet(url);
 			return response;
 		}
