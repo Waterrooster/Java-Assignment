@@ -81,10 +81,6 @@ public class ATM implements Runnable
 	 
 	 String createCustomerErrorMessage = "";
 	 
-//public void setThreadId(long id) {
-//	threadId = id;
-//}
-
 	public ATM(ATMCaseStudy atmObject) {
 		this.atmObject = atmObject;
 		AtmWindow.setSize(400, 200);
@@ -207,12 +203,14 @@ public void newCustomer()
 
 			   if (userAuthenticated )
 			   {
+					currentAccountNumber = accountNumber;
+					customerName = bankDatabase.getName(currentAccountNumber);
+					if(atmObject.customerThreadList.indexOf(customerName)==-1)
+					{
 					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 					Date date = new Date();
 					DateFormat time = new SimpleDateFormat("HH:mm:ss");
 					Calendar cal = Calendar.getInstance();
-					currentAccountNumber = accountNumber;
-					customerName = bankDatabase.getName(currentAccountNumber);
 					
 					atmObject.thread = new Thread(customerName);
 					atmObject.threads.add(atmObject.thread);
@@ -241,13 +239,17 @@ public void newCustomer()
 					
 					String weatherMessage = String.format("Hi! %s.%nCurrent weather description: %s%nTemperature: %.2f F%n", customerName,weatherDescription,currentTemp);
 					JOptionPane.showMessageDialog(null,weatherMessage);
+					}else
+					{
+						JOptionPane.showMessageDialog(null, "User already logged in.");
+						newCustomer();
 					}
-			   else
+			 }else
 			   {
 				   usernameInput.setText("");
 				   passwordInput.setText("");
 				   JOptionPane.showMessageDialog(null,"Invalid Account number or Pin. Please try again!");
-			   }	
+			   }
 		}catch(Exception error){
 			JOptionPane.showMessageDialog(null,"Please provide valid account details");
 		}
@@ -595,7 +597,8 @@ public void newCustomer()
 			Calendar cal = Calendar.getInstance();
 			endTime = System.currentTimeMillis();
 			totalTime = endTime-startTime;
-			
+			atmObject.customerThreadList.remove(atmObject.customerThreadList.indexOf(customerName)+1);
+			atmObject.customerThreadList.remove(atmObject.customerThreadList.indexOf(customerName));
 			long secs = TimeUnit.MILLISECONDS.toSeconds(totalTime);
 			threadMessage += String.format("Thread id:  %s.  Customer name:  %s.  Thread state: %s. Endtime: %s    %s  Total time: %d seconds %n",threadId,customerName,"Customer Logged out", dateFormat.format(date),time.format(cal.getTime()),secs);
 			String message = String.format("%s%n%s%n%n","Exiting the system...","Thank you! Goodbye!");
