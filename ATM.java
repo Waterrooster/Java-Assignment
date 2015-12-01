@@ -29,6 +29,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 public class ATM implements Runnable
 {
 // no-argument ATM constructor initializes instance variables
@@ -76,7 +77,8 @@ public class ATM implements Runnable
 	 JTextField usernameInput;
 	 JTextField passwordInput;
 	 ATMCaseStudy atmObject;
-
+	 
+	 String createCustomerErrorMessage = "";
 	 
 public void setThreadId(long id) {
 	threadId = id;
@@ -204,6 +206,7 @@ public void showPanel(JPanel panelName)
 					startOptionWindow();
 					AtmWindow.setTitle(customerName);
 					atmObject.addCustomer(customerName);
+										
 					String weather = getWeather();
 					Pattern p = Pattern.compile(".*description\\\":\\\"([^\\\"]+).*");
 					Matcher m = p.matcher(weather);
@@ -211,8 +214,10 @@ public void showPanel(JPanel panelName)
 					if (m.matches()) {
 						weatherDescription = m.group(1);
 					}
-					JOptionPane.showMessageDialog(null,weatherDescription);
-
+					String weatherMessage = String.format("Hi! %s.%nCurrent weather description: %s", customerName,weatherDescription);
+					JOptionPane.showMessageDialog(null,weatherMessage);
+					
+					atmObject.customerList.setSelectedItem(customerName);
 					}
 			   else
 			   {
@@ -247,7 +252,8 @@ public void showPanel(JPanel panelName)
 		 customerBalanceInput = new JTextField();
 		
 		JButton createCustomerButton = new JButton("Create");
-				
+		JButton cancelCustomerButton = new JButton("Cancel");
+		
 		CreateCustomerPanel.add(customerFirstNameLabel);
 		CreateCustomerPanel.add(customerLastNameLabel);
 		CreateCustomerPanel.add(customerAccountNumber);
@@ -262,6 +268,7 @@ public void showPanel(JPanel panelName)
 		CreateCustomerPanel.add(customerPinVerificationInput);
 		CreateCustomerPanel.add(customerBalanceInput);
 		CreateCustomerPanel.add(createCustomerButton);
+		CreateCustomerPanel.add(cancelCustomerButton);
 		
 		GroupLayout layout = new GroupLayout(CreateCustomerPanel);
 		CreateCustomerPanel.setLayout(layout);
@@ -270,8 +277,8 @@ public void showPanel(JPanel panelName)
 		   
 		   layout.setAutoCreateContainerGaps(true);
 		   GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
-		   hGroup.addGroup(layout.createParallelGroup().addComponent(customerFirstNameLabel).addComponent(customerLastNameLabel).addComponent(customerAccountNumber).addComponent(customerAccountNumber).addComponent(customerPinNumber).addComponent(customerPinVerification).addComponent(customerDepositBalance));
-		   hGroup.addGroup(layout.createParallelGroup().addComponent(customerFirstNameInput).addComponent(customerLastNameInput).addComponent(customerAccountNumberInput).addComponent(customerPinInput).addComponent(customerPinVerificationInput).addComponent(customerBalanceInput).addComponent(createCustomerButton));
+		   hGroup.addGroup(layout.createParallelGroup().addComponent(customerFirstNameLabel).addComponent(customerLastNameLabel).addComponent(customerAccountNumber).addComponent(customerAccountNumber).addComponent(customerPinNumber).addComponent(customerPinVerification).addComponent(customerDepositBalance).addComponent(createCustomerButton));
+		   hGroup.addGroup(layout.createParallelGroup().addComponent(customerFirstNameInput).addComponent(customerLastNameInput).addComponent(customerAccountNumberInput).addComponent(customerPinInput).addComponent(customerPinVerificationInput).addComponent(customerBalanceInput).addComponent(cancelCustomerButton));
 		   layout.setHorizontalGroup(hGroup);
 		   
 		   
@@ -289,30 +296,187 @@ public void showPanel(JPanel panelName)
 				   addComponent(customerPinVerification).addComponent(customerPinVerificationInput));
 		   vGroup.addGroup(layout.createParallelGroup().
 				   addComponent(customerDepositBalance).addComponent(customerBalanceInput));		   
-		   vGroup.addGroup(layout.createParallelGroup().addComponent(createCustomerButton));
+		   vGroup.addGroup(layout.createParallelGroup().
+				   addComponent(createCustomerButton).addComponent(cancelCustomerButton));
 		   layout.setVerticalGroup(vGroup);
 		   
 		   createCustomerButton.addActionListener(new ActionListener(){
 			   public void actionPerformed(ActionEvent e)
 			   {
-				   createCustomerExecute();
+				   try
+				   {
+					   createCustomerExecute();
+				   }catch(Exception m)
+				   {
+					   createCustomerPanelFunction();
+					   hidePanel(CreateCustomerPanel);
+					   showPanel(CreateCustomerPanel);
+					   JOptionPane.showMessageDialog(null,"Kindly enter valid details.");
+				   }
 			   }
 		   });
-		   
+		   cancelCustomerButton.addActionListener(new ActionListener(){
+			   public void actionPerformed(ActionEvent e)
+			   {
+				   createCustomerPanelFunction();
+				   hidePanel(CreateCustomerPanel);
+				   AtmWindow.setSize(400, 200);
+				   showPanel(LoginPanel);
+			   }
+		   });
 	}
   void createCustomerExecute()
   {
-	 String custoFirstName = customerFirstNameInput.getText();
-	 String custoLastName = customerLastNameInput.getText();
-	 int custoAccountNumber = Integer.parseInt(customerAccountNumberInput.getText());
-	 int custoPin = Integer.parseInt(customerPinInput.getText());
-	 double custoBalance = Double.parseDouble(customerBalanceInput.getText());
-	
+	 if(customerName()&customerAccountNumber()&customerPin()&customerBalance()&&customerPinVerify()&&validAccountNumber()&&validName())
+	 {
+		 String custoFirstName = customerFirstNameInput.getText();
+		 String custoLastName = customerLastNameInput.getText();
+		 int custoAccountNumber = Integer.parseInt(customerAccountNumberInput.getText());
+		 @SuppressWarnings("deprecation")
+		int custoPin = Integer.parseInt(customerPinInput.getText());
+		 double custoBalance = Double.parseDouble(customerBalanceInput.getText());
 	 Account acc = new Account(custoAccountNumber,custoPin,custoBalance, custoBalance,custoFirstName,custoLastName);
 	 bankDatabase.addAccount(acc);
 	 hidePanel(CreateCustomerPanel);
+	 String customerWelcomeMessage = String.format("Hi %s %s. Welcome to our bank.%nYour new account number is: %d%nYour account balance: %d%nThanks for banking with us.Have a great day.", 
+			 custoFirstName,custoLastName,custoAccountNumber,custoBalance);
+	 JOptionPane.showMessageDialog(null, customerWelcomeMessage);
 	 AtmWindow.setSize(400,200);
 	 showPanel(LoginPanel);
+	 }
+	 else
+	 {
+		 String completeMessage = String.format("Hi! We're sorry that your attempt to create a new account wasn't succesfull.%nReasons for the error:%n%s", createCustomerErrorMessage);
+		 JOptionPane.showMessageDialog(null, completeMessage);
+		 createCustomerPanelFunction();
+		 hidePanel(CreateCustomerPanel);
+		 showPanel(CreateCustomerPanel);
+	 }
+  }
+  void createCustomerPanelFunction()
+  {
+	  customerFirstNameInput.setText("");
+		 customerLastNameInput.setText("");
+		 customerAccountNumberInput.setText("");
+		 customerPinInput.setText("");
+		 customerPinVerificationInput.setText("");
+		 customerBalanceInput.setText(""); 
+  }
+  boolean validAccountNumber()
+  {
+	  if(customerAccountNumberInput.getText().charAt(0) == 0)
+	  {
+		  createCustomerErrorMessage += String.format("- %s%n","Account number cannot start with '0'.");
+		  return false;
+	  }
+	  else
+	  {
+		  return true;
+	  }
+  }
+  boolean validName()
+  {
+	  if(customerFirstNameInput.getText().matches(".*\\d.*") && customerLastNameInput.getText().matches(".*\\d.*"))
+	  {
+		  if(createCustomerErrorMessage.indexOf("Name")==-1)
+		  {
+		  createCustomerErrorMessage += String.format("- %s%n", "Name shouldn't contain numbers");
+		  }
+		  return false;
+	  }
+	  else
+	  {
+		  return true;
+	  }
+  }
+  boolean customerPinVerify()
+  {
+	  @SuppressWarnings("deprecation")
+		int custoPin = Integer.parseInt(customerPinInput.getText());
+	  @SuppressWarnings("deprecation")
+		int custVerifyPin = Integer.parseInt(customerPinVerificationInput.getText());
+	  if(custoPin == custVerifyPin)
+	  {
+		  return true;
+	  }
+	  else
+	  {
+		  createCustomerErrorMessage += String.format("- %s%n","Pin doesn't match");
+		  return false;
+	  }
+  }
+  boolean customerName()
+  {
+	  if(customerFirstNameInput.getText() != null && customerLastNameInput.getText() != null)
+	  {
+		  return true;
+	  }
+	  else
+	  {
+		  return false;
+	  }
+  }
+  boolean customerAccountNumber()
+  {
+	  int customerAccNumber = Integer.parseInt(customerAccountNumberInput.getText());
+	  boolean accountNumberNotPresent = true;
+	  if(String.valueOf(customerAccNumber).length()!=5)
+	  {
+		  createCustomerErrorMessage += String.format("- %s%n", "Enter a valid account number that contains 5 numbers");
+		  accountNumberNotPresent = false;
+	  }
+	  else
+	  {
+		  for(Account a:bankDatabase.accounts)
+		  {
+			  if(a.getAccountNumber() == customerAccNumber)
+			  {
+				  createCustomerErrorMessage += String.format("- %s%n", "Account ID already exists.Kindly choose another number");
+				  accountNumberNotPresent = false;
+				  break;
+			  }
+			  else
+			  {
+				  accountNumberNotPresent = true;
+			  }
+		  }
+	  }
+	 
+	  return accountNumberNotPresent;
+  }
+  boolean customerPin()
+  {
+	  @SuppressWarnings("deprecation")
+	int custoPin = Integer.parseInt(customerPinInput.getText());
+	  @SuppressWarnings("deprecation")
+	int custVerifyPin = Integer.parseInt(customerPinVerificationInput.getText());
+	  if(String.valueOf(custoPin).length()!=5 && String.valueOf(custVerifyPin).length() != 5)
+	  {
+		  if(createCustomerErrorMessage.indexOf("5 digits")==-1)
+		  {
+			  createCustomerErrorMessage += String.format("- %s%n", "Please choose a pin of 5 digits.");  
+		  }
+		  return false;
+	  }
+	  else
+	  {
+		  return true;
+	  }
+  }
+  boolean customerBalance()
+  {
+	  if(Double.parseDouble(customerBalanceInput.getText())/100<500)
+	  {
+		  if(createCustomerErrorMessage.indexOf("500")==-1)
+		  {
+		  createCustomerErrorMessage+= String.format("- %s$%n", "Please deposit amount greater than 500");
+		  }
+		  return false;
+	  }
+	  else
+	  {
+		  return true;
+	  }
   }
   void createOptionPanel()
 	{
@@ -404,14 +568,15 @@ public void showPanel(JPanel panelName)
 			Calendar cal = Calendar.getInstance();
 			endTime = System.currentTimeMillis();
 			totalTime = endTime-startTime;
-			
+			atmObject.customerList.removeItem(customerName);
 			long secs = TimeUnit.MILLISECONDS.toSeconds(totalTime);
 			threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Endtime: %s    %s  Total time: %d seconds %n",threadId,customerName,"Customer Logged out", dateFormat.format(date),time.format(cal.getTime()),secs);
 			String message = String.format("%s%n%s%n%n","Exiting the system...","Thank you! Goodbye!");
 			ATMCaseStudy.activeCustomers--;
 			JOptionPane.showMessageDialog(null,message);
 			JOptionPane.showMessageDialog(null,threadMessage);
-			AtmWindow.dispose();
+			hidePanel(OptionWindowPanel);
+			showPanel(LoginPanel);
 		}
 	});
 	}
@@ -968,11 +1133,6 @@ public void showPanel(JPanel panelName)
 			   vGroup.addGroup(layout.createParallelGroup(Alignment.CENTER).addComponent(generateStatement));
 			   layout.setVerticalGroup(vGroup);
 			  
-				DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-				Date date = new Date();
-				DateFormat time = new SimpleDateFormat("HH:mm:ss");
-				Calendar cal = Calendar.getInstance();
-				threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s    %s %n",threadId,customerName,"Viewed statement", dateFormat.format(date),time.format(cal.getTime()));
 				generateStatement.addActionListener(new ActionListener(){
 				   public void actionPerformed(ActionEvent e){
 					   statementGeneration();
@@ -1065,6 +1225,11 @@ public void showPanel(JPanel panelName)
 			   		   
 			   if(performOperation)
 			   { 
+				   DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+					Date currentDate = new Date();
+					DateFormat time = new SimpleDateFormat("HH:mm:ss");
+					Calendar cal = Calendar.getInstance();
+					threadMessage += String.format("Thread id:  %d.  Customer name:  %s.  Thread state: %s. Start time: %s    %s %n",threadId,customerName,"Viewed statement", dateFormat.format(currentDate),time.format(cal.getTime()));
 				  for(int i = 0; i< data.size(); i++)
 				  {
 					  String dateString = data.get(i);
@@ -1109,6 +1274,7 @@ public void showPanel(JPanel panelName)
 			}
 		}
 		
+		// Implementing web services
 		public  String httpGet(String urlStr) throws IOException {
 			  URL url = new URL(urlStr);
 			  HttpURLConnection conn =
@@ -1133,7 +1299,7 @@ public void showPanel(JPanel panelName)
 			}
 		
 		public String getWeather() {
-			String url = "http://api.openweathermap.org/data/2.5/weather?q=Melbourne,USA;&APPID=5dc7d6a8515808735afe5fd3f01c0586";
+			String url = "http://api.openweathermap.org/data/2.5/weather?q=Melbourne,USA;&APPID=1dbadfb1be375be9be48b12c00e4ca59";
 			String response = doHttpGet(url);
 			return response;
 		}
