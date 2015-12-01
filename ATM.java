@@ -26,9 +26,7 @@ import java.util.Timer;
 import java.util.Random;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import org.json.*;
 
 public class ATM implements Runnable
 {
@@ -206,15 +204,20 @@ public void showPanel(JPanel panelName)
 					startOptionWindow();
 					AtmWindow.setTitle(customerName);
 					atmObject.addCustomer(customerName);
-										
-					String weather = getWeather();
-					Pattern p = Pattern.compile(".*description\\\":\\\"([^\\\"]+).*");
-					Matcher m = p.matcher(weather);
+								
+					
+					JSONObject obj = new JSONObject(getWeather());
 					String weatherDescription = "";
-					if (m.matches()) {
-						weatherDescription = m.group(1);
+					Double currentTemp = 0.0;
+					
+					JSONArray arr = obj.getJSONArray("weather");
+					for (int i = 0; i < arr.length(); i++)
+					{
+					    weatherDescription = arr.getJSONObject(i).getString("description");
 					}
-					String weatherMessage = String.format("Hi! %s.%nCurrent weather description: %s", customerName,weatherDescription);
+					currentTemp = obj.getJSONObject("main").getDouble("temp")*9/5 - 459.67;
+					
+					String weatherMessage = String.format("Hi! %s.%nCurrent weather description: %s%nTemperature: %.2f F%n", customerName,weatherDescription,currentTemp);
 					JOptionPane.showMessageDialog(null,weatherMessage);
 					
 					atmObject.customerList.setSelectedItem(customerName);
