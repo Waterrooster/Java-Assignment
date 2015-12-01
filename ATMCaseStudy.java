@@ -18,6 +18,8 @@ public class ATMCaseStudy
 	List<Thread> threads = new ArrayList<>();
 	List<String> customerThreadList = new ArrayList<>();
 	List<String> customerTransactionMessage = new ArrayList<>();
+	@SuppressWarnings("rawtypes")
+	ArrayList<ArrayList> customerStatementMessage = new ArrayList<>();
 	Thread thread;
 	public void run()
 	{		

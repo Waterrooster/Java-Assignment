@@ -35,7 +35,7 @@ public class ATM implements Runnable
 {
 // no-argument ATM constructor initializes instance variables
 	ArrayList<Integer> promotions = new ArrayList<>();
-	ArrayList<String> data= new ArrayList<>();
+	ArrayList<String>  StatementBetweenDatesTransactionMessage;
 	 String customerName;
 	JFrame AtmWindow = new JFrame(customerName);
 	
@@ -192,6 +192,7 @@ public void newCustomer()
 		   });
 }
 	
+	@SuppressWarnings("unchecked")
 	public void authenticate() {
 		try
 		{
@@ -220,6 +221,24 @@ public void newCustomer()
 					atmObject.customerThreadList.add(Long.toString(atmObject.thread.getId()));
 					atmObject.customerTransactionMessage.add(customerName);
 					atmObject.customerTransactionMessage.add("");
+					
+					ArrayList<String> customerDetails = new ArrayList<>();
+					customerDetails.add(customerName);
+					
+					atmObject.customerStatementMessage.add(customerDetails);
+					atmObject.customerStatementMessage.add(new ArrayList<>());
+					
+					for(ArrayList<?> acc: atmObject.customerStatementMessage)
+					{
+						for(int i=0;i<acc.size();i++)
+						{
+							if(acc.get(0)== customerName)
+							{
+								atmObject.customerStatementMessage.indexOf(acc);
+								StatementBetweenDatesTransactionMessage = atmObject.customerStatementMessage.get(atmObject.customerStatementMessage.indexOf(acc)+1);
+							}
+						}
+					}						
 					
 					threadId = atmObject.customerThreadList.get((atmObject.customerThreadList.indexOf(customerName)+1));
 					transacMessage = atmObject.customerTransactionMessage.get((atmObject.customerTransactionMessage.indexOf(customerName)+1));
@@ -602,6 +621,20 @@ public void newCustomer()
 			atmObject.customerThreadList.remove(atmObject.customerThreadList.indexOf(customerName)+1);
 			atmObject.customerThreadList.remove(atmObject.customerThreadList.indexOf(customerName));
 			
+			int indexNumber = 0;
+			for(ArrayList<?> acc: atmObject.customerStatementMessage)
+			{
+				for(int i=0;i<acc.size();i++)
+				{
+					if(acc.get(0)== customerName)
+					{
+						indexNumber = atmObject.customerStatementMessage.indexOf(acc);
+					}
+				}
+			}						
+			atmObject.customerStatementMessage.remove(indexNumber+1);
+			atmObject.customerStatementMessage.remove(indexNumber);
+			
 			atmObject.customerTransactionMessage.remove(atmObject.customerTransactionMessage.indexOf(customerName)+1);
 			atmObject.customerTransactionMessage.remove(atmObject.customerTransactionMessage.indexOf(customerName));
 			long secs = TimeUnit.MILLISECONDS.toSeconds(totalTime);
@@ -619,12 +652,27 @@ public void newCustomer()
 	});
 	}
 		
-  public void setCustomer(String currentCustomerName)
+  @SuppressWarnings("unchecked")
+public void setCustomer(String currentCustomerName)
   {
 	  this.customerName = currentCustomerName;
 	  this.currentAccountNumber = bankDatabase.getAccountNumber(currentCustomerName);
 	  threadId = atmObject.customerThreadList.get((atmObject.customerThreadList.indexOf(customerName)+1));
 	  transacMessage = atmObject.customerTransactionMessage.get((atmObject.customerTransactionMessage.indexOf(customerName)+1));
+	  
+		for(ArrayList<?> acc: atmObject.customerStatementMessage)
+		{
+			for(int i=0;i<acc.size();i++)
+			{
+				if(acc.get(0)== customerName)
+				{
+					StatementBetweenDatesTransactionMessage = atmObject.customerStatementMessage.get(atmObject.customerStatementMessage.indexOf(acc)+1);
+				}
+			}
+		}						
+
+		
+	  
 	  AtmWindow.setTitle(customerName);
 	  AtmWindow.getContentPane().removeAll();
 	  showPanel(OptionWindowPanel);
@@ -875,10 +923,20 @@ public void newCustomer()
 						int indexVal = atmObject.customerTransactionMessage.indexOf(customerName)+1;
 						atmObject.customerTransactionMessage.set(indexVal, transacMessage);	
 						String localStatement = String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%.2f%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),depositAmount,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber)-depositAmount,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
-								data.add(localStatement);
-								depositInput.setText("");
-								hidePanel(DepositWindowPanel);
-								showPanel(OptionWindowPanel);
+						StatementBetweenDatesTransactionMessage.add(localStatement);
+						for(ArrayList<?> acc: atmObject.customerStatementMessage)
+						{
+							for(int i=0;i<acc.size();i++)
+							{
+								if(acc.get(0)== customerName)
+								{
+									atmObject.customerStatementMessage.set(atmObject.customerStatementMessage.indexOf(acc)+1, StatementBetweenDatesTransactionMessage);						
+								}
+							}
+						}
+						depositInput.setText("");
+						hidePanel(DepositWindowPanel);
+						showPanel(OptionWindowPanel);
 				      } // end if
 				      else // deposit envelope not received
 				      {
@@ -1018,7 +1076,17 @@ public void newCustomer()
 			int indexVal = atmObject.customerTransactionMessage.indexOf(customerName)+1;
 			atmObject.customerTransactionMessage.set(indexVal, transacMessage);		
 			String localStatement = String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
-					data.add(localStatement);
+			StatementBetweenDatesTransactionMessage.add(localStatement);
+			for(ArrayList<?> acc: atmObject.customerStatementMessage)
+			{
+				for(int i=0;i<acc.size();i++)
+				{
+					if(acc.get(0)== customerName)
+					{
+						atmObject.customerStatementMessage.set(atmObject.customerStatementMessage.indexOf(acc)+1, StatementBetweenDatesTransactionMessage);						
+					}
+				}
+			}
 		}
 		public void fourty(){
 			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -1035,8 +1103,18 @@ public void newCustomer()
 			int indexVal = atmObject.customerTransactionMessage.indexOf(customerName)+1;
 			atmObject.customerTransactionMessage.set(indexVal, transacMessage);		
 			String localStatement = String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
-					data.add(localStatement);
-		}
+			StatementBetweenDatesTransactionMessage.add(localStatement);
+			for(ArrayList<?> acc: atmObject.customerStatementMessage)
+			{
+				for(int i=0;i<acc.size();i++)
+				{
+					if(acc.get(0)== customerName)
+					{
+						atmObject.customerStatementMessage.set(atmObject.customerStatementMessage.indexOf(acc)+1, StatementBetweenDatesTransactionMessage);						
+					}
+				}
+			}
+			}
 		public void sixty(){
 			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 			Date date = new Date();
@@ -1052,8 +1130,18 @@ public void newCustomer()
 	 		int indexVal = atmObject.customerTransactionMessage.indexOf(customerName)+1;
 			atmObject.customerTransactionMessage.set(indexVal, transacMessage);			
 	 		String localStatement = String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
-					data.add(localStatement);
-		}
+	 		StatementBetweenDatesTransactionMessage.add(localStatement);
+			for(ArrayList<?> acc: atmObject.customerStatementMessage)
+			{
+				for(int i=0;i<acc.size();i++)
+				{
+					if(acc.get(0)== customerName)
+					{
+						atmObject.customerStatementMessage.set(atmObject.customerStatementMessage.indexOf(acc)+1, StatementBetweenDatesTransactionMessage);						
+					}
+				}
+			}
+			}
 		public void hundred(){
 			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 			Date date = new Date();
@@ -1069,8 +1157,18 @@ public void newCustomer()
 	 		int indexVal = atmObject.customerTransactionMessage.indexOf(customerName)+1;
 			atmObject.customerTransactionMessage.set(indexVal, transacMessage);			
 	 		String localStatement = String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
-					data.add(localStatement);
-		}
+	 		StatementBetweenDatesTransactionMessage.add(localStatement);
+			for(ArrayList<?> acc: atmObject.customerStatementMessage)
+			{
+				for(int i=0;i<acc.size();i++)
+				{
+					if(acc.get(0)== customerName)
+					{
+						atmObject.customerStatementMessage.set(atmObject.customerStatementMessage.indexOf(acc)+1, StatementBetweenDatesTransactionMessage);						
+					}
+				}
+			}
+			}
 		public void hundredTwenty(){
 			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 			Date date = new Date();
@@ -1086,7 +1184,17 @@ public void newCustomer()
 	 		int indexVal = atmObject.customerTransactionMessage.indexOf(customerName)+1;
 			atmObject.customerTransactionMessage.set(indexVal, transacMessage);			
 	 		String localStatement = String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
-					data.add(localStatement);
+	 		StatementBetweenDatesTransactionMessage.add(localStatement);
+			for(ArrayList<?> acc: atmObject.customerStatementMessage)
+			{
+				for(int i=0;i<acc.size();i++)
+				{
+					if(acc.get(0)== customerName)
+					{
+						atmObject.customerStatementMessage.set(atmObject.customerStatementMessage.indexOf(acc)+1, StatementBetweenDatesTransactionMessage);						
+					}
+				}
+			}
 		}
 		public void exceedTransaction()
 		{
@@ -1135,6 +1243,7 @@ public void newCustomer()
 			DateFormat time = new SimpleDateFormat("HH:mm:ss");
 			Calendar cal = Calendar.getInstance();
 			threadMessage += String.format("Thread id:  %s.  Customer name:  %s.  Thread state: %s. Start time: %s    %s %n",threadId,customerName,"Viewed complete statement", dateFormat.format(date),time.format(cal.getTime()));
+			
 			int indexVal = atmObject.customerTransactionMessage.indexOf(customerName)+1;
 			String message = atmObject.customerTransactionMessage.get(indexVal);
 			if(message == "")
@@ -1258,6 +1367,7 @@ public void newCustomer()
 		      } // end else
 		   } while ( !cashDispensed );
 	}
+		@SuppressWarnings("unchecked")
 		public void statementGeneration(){
 			 String statementMessage = "";
 			 String startingDate;
@@ -1284,7 +1394,21 @@ public void newCustomer()
 					DateFormat time = new SimpleDateFormat("HH:mm:ss");
 					Calendar cal = Calendar.getInstance();
 					threadMessage += String.format("Thread id:  %s.  Customer name:  %s.  Thread state: %s. Start time: %s    %s %n",threadId,customerName,"Viewed statement", dateFormat.format(currentDate),time.format(cal.getTime()));
-				  for(int i = 0; i< data.size(); i++)
+					ArrayList<String> data = new ArrayList<>();
+					for(ArrayList<?> acc: atmObject.customerStatementMessage)
+					{
+						for(int i=0;i<acc.size();i++)
+						{
+							if(acc.get(0)== customerName)
+							{
+								int indexNumber = atmObject.customerStatementMessage.indexOf(acc);
+								 data = atmObject.customerStatementMessage.get(indexNumber+1);
+							}
+						}
+					}
+											
+					
+				for(int i = 0; i< data.size(); i++)
 				  {
 					  String dateString = data.get(i);
 					  String date = dateString.substring(1, 11);
