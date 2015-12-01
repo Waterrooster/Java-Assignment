@@ -8,6 +8,7 @@ The java files collectively run as an ATM machine that can do the following acti
  * View Balance
  * Withdraw money
  * View complete statement (or) statement between desired dates
+ * View and Choose promotions
  * Multi threading 
  * Finally web services are associated with the app
  
