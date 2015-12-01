@@ -26,6 +26,9 @@ import java.util.Timer;
 import java.util.Random;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.json.*;
 
 public class ATM implements Runnable
@@ -209,7 +212,6 @@ public void showPanel(JPanel panelName)
 					JSONObject obj = new JSONObject(getWeather());
 					String weatherDescription = "";
 					Double currentTemp = 0.0;
-					
 					JSONArray arr = obj.getJSONArray("weather");
 					for (int i = 0; i < arr.length(); i++)
 					{
@@ -219,6 +221,7 @@ public void showPanel(JPanel panelName)
 					
 					String weatherMessage = String.format("Hi! %s.%nCurrent weather description: %s%nTemperature: %.2f F%n", customerName,weatherDescription,currentTemp);
 					JOptionPane.showMessageDialog(null,weatherMessage);
+					
 					
 					atmObject.customerList.setSelectedItem(customerName);
 					}
@@ -340,10 +343,12 @@ public void showPanel(JPanel panelName)
 		 double custoBalance = Double.parseDouble(customerBalanceInput.getText());
 	 Account acc = new Account(custoAccountNumber,custoPin,custoBalance, custoBalance,custoFirstName,custoLastName);
 	 bankDatabase.addAccount(acc);
-	 hidePanel(CreateCustomerPanel);
-	 String customerWelcomeMessage = String.format("Hi %s %s. Welcome to our bank.%nYour new account number is: %d%nYour account balance: %d%nThanks for banking with us.Have a great day.", 
+	 String customerWelcomeMessage = String.format("Hi %s %s. Welcome to our bank.%nYour new account number is: %d%nYour account balance: %.2f%nThanks for banking with us.Have a great day.", 
 			 custoFirstName,custoLastName,custoAccountNumber,custoBalance);
 	 JOptionPane.showMessageDialog(null, customerWelcomeMessage);
+	 createCustomerPanelFunction();
+
+	 hidePanel(CreateCustomerPanel);
 	 AtmWindow.setSize(400,200);
 	 showPanel(LoginPanel);
 	 }
@@ -379,14 +384,16 @@ public void showPanel(JPanel panelName)
   }
   boolean validName()
   {
-	  if(customerFirstNameInput.getText().matches(".*\\d.*") && customerLastNameInput.getText().matches(".*\\d.*"))
-	  {
-		  if(createCustomerErrorMessage.indexOf("Name")==-1)
-		  {
-		  createCustomerErrorMessage += String.format("- %s%n", "Name shouldn't contain numbers");
-		  }
-		  return false;
-	  }
+	  Pattern p = Pattern.compile(".*\\d.*");
+		Matcher m = p.matcher(customerFirstNameInput.getText());
+		Matcher n = p.matcher(customerLastNameInput.getText());
+		if (m.matches() || n.matches()) {
+			if(createCustomerErrorMessage.indexOf("Name")== -1)
+			{
+				createCustomerErrorMessage += String.format("- %s%n", "Name shouldn't contain numbers");
+			}
+			return false;
+		}
 	  else
 	  {
 		  return true;
@@ -453,7 +460,7 @@ public void showPanel(JPanel panelName)
 	int custoPin = Integer.parseInt(customerPinInput.getText());
 	  @SuppressWarnings("deprecation")
 	int custVerifyPin = Integer.parseInt(customerPinVerificationInput.getText());
-	  if(String.valueOf(custoPin).length()!=5 && String.valueOf(custVerifyPin).length() != 5)
+	  if(String.valueOf(custoPin).length()!=5 || String.valueOf(custVerifyPin).length() != 5)
 	  {
 		  if(createCustomerErrorMessage.indexOf("5 digits")==-1)
 		  {
@@ -468,7 +475,7 @@ public void showPanel(JPanel panelName)
   }
   boolean customerBalance()
   {
-	  if(Double.parseDouble(customerBalanceInput.getText())/100<500)
+	  if(Double.parseDouble(customerBalanceInput.getText())<500)
 	  {
 		  if(createCustomerErrorMessage.indexOf("500")==-1)
 		  {
