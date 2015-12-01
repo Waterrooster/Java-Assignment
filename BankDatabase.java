@@ -48,6 +48,7 @@ public int getAccountNumber(String customerName) {
 	
 	return -1;
 }
+
 // retrieve Account object containing specified account number
 private Account getAccount( int accountNumber )
 {

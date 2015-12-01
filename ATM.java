@@ -36,7 +36,6 @@ public class ATM implements Runnable
 // no-argument ATM constructor initializes instance variables
 	ArrayList<Integer> promotions = new ArrayList<>();
 	ArrayList<String> data= new ArrayList<>();
-	String message = "";
 	 String customerName;
 	JFrame AtmWindow = new JFrame(customerName);
 	
@@ -75,6 +74,7 @@ public class ATM implements Runnable
 	 long startTime;
 	 long endTime;
 	 long totalTime;
+	 String transacMessage = "";
 	 JTextField usernameInput;
 	 JTextField passwordInput;
 	 ATMCaseStudy atmObject;
@@ -218,9 +218,11 @@ public void newCustomer()
 					
 					atmObject.customerThreadList.add(customerName);
 					atmObject.customerThreadList.add(Long.toString(atmObject.thread.getId()));
+					atmObject.customerTransactionMessage.add(customerName);
+					atmObject.customerTransactionMessage.add("");
 					
 					threadId = atmObject.customerThreadList.get((atmObject.customerThreadList.indexOf(customerName)+1));
-					
+					transacMessage = atmObject.customerTransactionMessage.get((atmObject.customerTransactionMessage.indexOf(customerName)+1));
 					threadMessage += String.format("Thread id:  %s.  Customer name:  %s.  Thread state: %s. Start time: %s    %s %n",threadId,customerName,"Customer Login", dateFormat.format(date),time.format(cal.getTime()));
 					startTime = cal.getTimeInMillis();
 					startOptionWindow();
@@ -599,6 +601,9 @@ public void newCustomer()
 			totalTime = endTime-startTime;
 			atmObject.customerThreadList.remove(atmObject.customerThreadList.indexOf(customerName)+1);
 			atmObject.customerThreadList.remove(atmObject.customerThreadList.indexOf(customerName));
+			
+			atmObject.customerTransactionMessage.remove(atmObject.customerTransactionMessage.indexOf(customerName)+1);
+			atmObject.customerTransactionMessage.remove(atmObject.customerTransactionMessage.indexOf(customerName));
 			long secs = TimeUnit.MILLISECONDS.toSeconds(totalTime);
 			threadMessage += String.format("Thread id:  %s.  Customer name:  %s.  Thread state: %s. Endtime: %s    %s  Total time: %d seconds %n",threadId,customerName,"Customer Logged out", dateFormat.format(date),time.format(cal.getTime()),secs);
 			String message = String.format("%s%n%s%n%n","Exiting the system...","Thank you! Goodbye!");
@@ -619,6 +624,7 @@ public void newCustomer()
 	  this.customerName = currentCustomerName;
 	  this.currentAccountNumber = bankDatabase.getAccountNumber(currentCustomerName);
 	  threadId = atmObject.customerThreadList.get((atmObject.customerThreadList.indexOf(customerName)+1));
+	  transacMessage = atmObject.customerTransactionMessage.get((atmObject.customerTransactionMessage.indexOf(customerName)+1));
 	  AtmWindow.setTitle(customerName);
 	  AtmWindow.getContentPane().removeAll();
 	  showPanel(OptionWindowPanel);
@@ -865,8 +871,10 @@ public void newCustomer()
 				 		Transaction foo = new BalanceInquiry(currentAccountNumber,bankDatabase);
 						threadMessage += String.format("Thread id:  %s.  Customer name:  %s.  Thread state: %s. Start time: %s    %s %n",threadId,customerName,"Deposit", dateFormat.format(date),time.format(cal.getTime()));
 
-						message += String.format("%n%s%n%s%nTransaction type: Deposit%nTransaction amount: $%.2f%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),depositAmount,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber)-depositAmount,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
-								String localStatement = String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%.2f%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),depositAmount,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber)-depositAmount,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
+						transacMessage += String.format("%n%s%n%s%nTransaction type: Deposit%nTransaction amount: $%.2f%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),depositAmount,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber)-depositAmount,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
+						int indexVal = atmObject.customerTransactionMessage.indexOf(customerName)+1;
+						atmObject.customerTransactionMessage.set(indexVal, transacMessage);	
+						String localStatement = String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%.2f%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),depositAmount,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber)-depositAmount,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
 								data.add(localStatement);
 								depositInput.setText("");
 								hidePanel(DepositWindowPanel);
@@ -1006,8 +1014,10 @@ public void newCustomer()
 			execute(withdrawalValue);
 			Transaction foo = new BalanceInquiry(currentAccountNumber,bankDatabase);
 			threadMessage += String.format("Thread id:  %s.  Customer name:  %s.  Thread state: %s. Start time: %s    %s %n",threadId,customerName,"Withdrawal", dateFormat.format(date),time.format(cal.getTime()));
-			message += String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
-					String localStatement = String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
+			transacMessage += String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
+			int indexVal = atmObject.customerTransactionMessage.indexOf(customerName)+1;
+			atmObject.customerTransactionMessage.set(indexVal, transacMessage);		
+			String localStatement = String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
 					data.add(localStatement);
 		}
 		public void fourty(){
@@ -1021,8 +1031,10 @@ public void newCustomer()
 			execute(withdrawalValue);
 			Transaction foo = new BalanceInquiry(currentAccountNumber,bankDatabase);
 			threadMessage += String.format("Thread id:  %s.  Customer name:  %s.  Thread state: %s. Start time: %s    %s %n",threadId,customerName,"Withdrawal", dateFormat.format(date),time.format(cal.getTime()));
-			message += String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
-					String localStatement = String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
+			transacMessage += String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
+			int indexVal = atmObject.customerTransactionMessage.indexOf(customerName)+1;
+			atmObject.customerTransactionMessage.set(indexVal, transacMessage);		
+			String localStatement = String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
 					data.add(localStatement);
 		}
 		public void sixty(){
@@ -1036,8 +1048,10 @@ public void newCustomer()
 			execute(withdrawalValue);
 			Transaction foo = new BalanceInquiry(currentAccountNumber,bankDatabase);
 			threadMessage += String.format("Thread id:  %s.  Customer name:  %s.  Thread state: %s. Start time: %s    %s %n",threadId,customerName,"Withdrawal", dateFormat.format(date),time.format(cal.getTime()));
-	 		message += String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
-					String localStatement = String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
+	 		transacMessage += String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
+	 		int indexVal = atmObject.customerTransactionMessage.indexOf(customerName)+1;
+			atmObject.customerTransactionMessage.set(indexVal, transacMessage);			
+	 		String localStatement = String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
 					data.add(localStatement);
 		}
 		public void hundred(){
@@ -1051,8 +1065,10 @@ public void newCustomer()
 			execute(withdrawalValue);
 			Transaction foo = new BalanceInquiry(currentAccountNumber,bankDatabase);
 			threadMessage += String.format("Thread id:  %s.  Customer name:  %s.  Thread state: %s. Start time: %s    %s %n",threadId,customerName,"Withdrawal", dateFormat.format(date),time.format(cal.getTime()));
-	 		message += String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
-					String localStatement = String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
+	 		transacMessage += String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
+	 		int indexVal = atmObject.customerTransactionMessage.indexOf(customerName)+1;
+			atmObject.customerTransactionMessage.set(indexVal, transacMessage);			
+	 		String localStatement = String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
 					data.add(localStatement);
 		}
 		public void hundredTwenty(){
@@ -1066,8 +1082,10 @@ public void newCustomer()
 			execute(withdrawalValue);
 			Transaction foo = new BalanceInquiry(currentAccountNumber,bankDatabase);
 			threadMessage += String.format("Thread id:  %s.  Customer name:  %s.  Thread state: %s. Start time: %s    %s %n",threadId,customerName,"Withdrawal", dateFormat.format(date),time.format(cal.getTime()));
-	 		message += String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
-					String localStatement = String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
+	 		transacMessage += String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
+	 		int indexVal = atmObject.customerTransactionMessage.indexOf(customerName)+1;
+			atmObject.customerTransactionMessage.set(indexVal, transacMessage);			
+	 		String localStatement = String.format("%n%s%n%s%nTransaction type: Withdrawal%nTransaction amount: $%d%nBefore Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%nAfter Transaction:%nAvailable Balance: $%.2f%nTotal Balance: $%.2f%n", dateFormat.format(date),time.format(cal.getTime()),withdrawalValue,foo.getAvailableBalance(currentAccountNumber)+withdrawalValue,foo.getTotalBalance(currentAccountNumber)+withdrawalValue,foo.getAvailableBalance(currentAccountNumber),foo.getTotalBalance(currentAccountNumber));
 					data.add(localStatement);
 		}
 		public void exceedTransaction()
@@ -1117,6 +1135,8 @@ public void newCustomer()
 			DateFormat time = new SimpleDateFormat("HH:mm:ss");
 			Calendar cal = Calendar.getInstance();
 			threadMessage += String.format("Thread id:  %s.  Customer name:  %s.  Thread state: %s. Start time: %s    %s %n",threadId,customerName,"Viewed complete statement", dateFormat.format(date),time.format(cal.getTime()));
+			int indexVal = atmObject.customerTransactionMessage.indexOf(customerName)+1;
+			String message = atmObject.customerTransactionMessage.get(indexVal);
 			if(message == "")
 			{
 				JOptionPane.showMessageDialog(null, "No transactions made.");

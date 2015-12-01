@@ -12,6 +12,7 @@ protected double totalBalance; // funds available + pending deposits
 protected String firstName;
 protected String lastName;
 long threadID=0;
+
 // Account constructor initializes attributes
 public Account(int theAccountNumber)
 {
@@ -45,7 +46,6 @@ public String getLastName()
 {
 	return lastName;
 }
-
 // returns available balance
 public double getAvailableBalance()
 {

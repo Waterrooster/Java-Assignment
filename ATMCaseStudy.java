@@ -17,6 +17,7 @@ public class ATMCaseStudy
 	JComboBox<String> customerList;
 	List<Thread> threads = new ArrayList<>();
 	List<String> customerThreadList = new ArrayList<>();
+	List<String> customerTransactionMessage = new ArrayList<>();
 	Thread thread;
 	public void run()
 	{		
